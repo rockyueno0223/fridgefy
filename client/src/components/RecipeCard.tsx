@@ -25,13 +25,11 @@ const RecipeCard = ({
   name,
   prepTimeMinutes,
   cookTimeMinutes,
-  cuisine,
   caloriesPerServing,
   ingredients,
   rating,
   image,
   tags,
-  mealType
 }:Recipe) => {
   return (
     <Card className="w-full max-w-md overflow-hidden mb-4">
