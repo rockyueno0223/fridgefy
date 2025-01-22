@@ -1,4 +1,3 @@
-// components/Recipes.tsx
 import { useEffect, useState } from "react";
 import RecipeCard from "@/components/RecipeCard";
 import { Recipe } from "@/components/RecipeCard";
@@ -20,6 +19,7 @@ export function Recipes() {
                 setIsLoading(true);
                 const response = await fetch('https://dummyjson.com/recipes');
                 const json = await response.json() as RecipesResponse;
+                console.log(json.recipes)
                 setData(json.recipes || []);
                 setFilteredData(json.recipes || []);
             } catch (error) {

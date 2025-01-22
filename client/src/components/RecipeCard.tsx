@@ -27,6 +27,7 @@ const RecipeCard = ({
   cookTimeMinutes,
   cuisine,
   caloriesPerServing,
+  ingredients,
   rating,
   image,
   tags,
@@ -72,10 +73,10 @@ const RecipeCard = ({
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <Badge variant="secondary">{cuisine}</Badge>
-          {mealType.map(type => (
-            <Badge key={type} variant="secondary">
-              {type}
+        <div className="flex justify-start items-center text-gray-500">Ingredients: </div>
+          {ingredients.map(item => (
+            <Badge key={item} variant="secondary">
+              {item}
             </Badge>
           ))}
         </div>
