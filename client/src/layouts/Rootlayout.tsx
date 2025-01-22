@@ -6,19 +6,23 @@ import { Header } from "../components/Header";
 
 const RootLayout = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
 
-      <SidebarProvider>
-        <RecipeSidebar />
-      </SidebarProvider>
-
-      <Outlet />
-
-      <SidebarProvider>
-        <FridgeSidebar />
-      </SidebarProvider>
-    </>
+      <div className="flex-1">
+        <div className="flex">
+          <SidebarProvider>
+            <RecipeSidebar />
+          </SidebarProvider>
+          <main>
+            <Outlet />
+          </main>
+          <SidebarProvider>
+            <FridgeSidebar />
+          </SidebarProvider>
+        </div>
+      </div>
+    </div>
   );
 };
 
