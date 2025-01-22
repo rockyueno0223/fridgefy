@@ -1,5 +1,6 @@
+import { FridgeSidebar } from "@/components/FridgeSidebar";
 import { RecipeSidebar } from "@/components/RecipeSidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/Header";
 
@@ -10,8 +11,12 @@ const RootLayout = () => {
 
       <SidebarProvider>
         <RecipeSidebar />
-        <SidebarTrigger />
-        <Outlet />
+      </SidebarProvider>
+
+      <Outlet />
+
+      <SidebarProvider>
+        <FridgeSidebar />
       </SidebarProvider>
     </>
   );

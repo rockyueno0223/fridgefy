@@ -9,24 +9,24 @@ import {
 } from "./ui/sidebar";
 
 // test data
-const recipes = [
-  { id: 1, name: "Spaghetti" },
-  { id: 2, name: "Pizza" },
-  { id: 3, name: "Salad" },
+const fridgeItems = [
+  { id: 1, name: "Milk" },
+  { id: 2, name: "Eggs" },
+  { id: 3, name: "Cheese" },
 ];
 
-export const RecipeSidebar = () => {
+export const FridgeSidebar = () => {
   return (
-    <Sidebar>
-      <SidebarTrigger className="absolute right-0 top-4 translate-x-full" />
+    <Sidebar side="right">
+      <SidebarTrigger className="absolute left-0 top-4 -translate-x-full rotate-180" />
       <SidebarHeader />
       <SidebarContent className="p-4">
-        <SidebarGroupLabel className="text-xl">Recipes</SidebarGroupLabel>
+        <SidebarGroupLabel className="text-xl">Fridge</SidebarGroupLabel>
         <SidebarGroupContent>
           <ul className="space-y-2">
-            {recipes.map((recipe) => (
-              <li key={recipe.id} className="flex justify-between">
-                <span>{recipe.name}</span>
+            {fridgeItems.map((item) => (
+              <li key={item.id} className="flex justify-between">
+                <span>{item.name}</span>
                 <button>&#215;</button>
               </li>
             ))}
