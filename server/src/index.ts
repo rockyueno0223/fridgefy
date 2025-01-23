@@ -19,6 +19,12 @@ app.use(clerkMiddleware());
 //routes
 app.use("/api/v1", v1router);
 
+// app.get("/current-user", async (req, res) => {
+//   const currentUser = await clerkClient.users.getUser(req.auth.userId);
+
+//   res.json(currentUser);
+// });
+
 //connecting mongo db
 const MONGO_URI = process.env.DATABASE_URI!;
 
