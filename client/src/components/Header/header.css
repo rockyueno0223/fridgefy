@@ -2,13 +2,13 @@
 
 .shown {
     transform: translateY(74);
-    z-index: 0
+    z-index: 10
 
 }
 
 .hidden {
     transform: translateY(-230);
     transition: all 1s ease-out;
-    z-index: 0
+    z-index: 10
 
 }
