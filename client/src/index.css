@@ -122,3 +122,8 @@ font-family: "Montserrat", serif;
 width: 100vw;
 overflow: scroll;
 }
+
+main{
+  width: max-content;
+  max-width: 100vw;
+}
