@@ -2,8 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+.dm-serif-text-regular {
+  font-family: "DM Serif Text", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.dm-serif-text-home-title {
+  font-family: "DM Serif Text", serif;
+  font-size: 54px;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.dm-serif-text-regular-italic {
+  font-family: "DM Serif Text", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/*  <uniquifier>: Use a unique and descriptive class name 
+ <weight>: Use a value from 100 to 900 */
+
+.montserrat-home {
+  font-family: "Montserrat", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
 @layer base {
   :root {
+    width: 100vw;
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
@@ -84,7 +115,7 @@
   }
 }
 
-.text-stroke-3 {
-  text-shadow: -1px -1px 0 rgb(0, 75, 24), 1px -1px 0 rgb(16, 96, 0),
-    -1px 1px 0 rgb(0, 73, 2), 1px 1px 0 rgb(2, 100, 0);
+
+body{
+background-color:  #F8FAFC;
 }
