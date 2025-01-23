@@ -118,6 +118,7 @@
 
 body{
 background-color:  #F8FAFC;
+font-family: "Montserrat", serif;
 width: 100vw;
-overflow: hidden;
+overflow: scroll;
 }
