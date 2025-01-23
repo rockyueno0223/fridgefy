@@ -17,7 +17,7 @@ const fridgeItems = [
 
 export const FridgeSidebar = () => {
   return (
-      <Sidebar side="right"
+      <Sidebar side="left"
       className="z-10 mt-24"
     >
       <div className=" bg-green-200 bottom-[30px] rounded-md">
