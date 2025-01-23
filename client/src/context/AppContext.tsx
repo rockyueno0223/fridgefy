@@ -5,6 +5,10 @@ import { createContext, useContext } from "react";
 type AppContextType = {
   user: IUser | null;
   recipes: IRecipe[] | null;
+  loadingUser: boolean;
+  userError: string | null;
+  loadingRecipes: boolean;
+  recipesError: string | null;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
