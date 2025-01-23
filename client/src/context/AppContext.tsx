@@ -1,8 +1,10 @@
+import { IRecipe } from "@/types/recipe";
 import { IUser } from "@/types/user";
 import { createContext, useContext } from "react";
 
 type AppContextType = {
   user: IUser | null;
+  recipes: IRecipe[] | null;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);

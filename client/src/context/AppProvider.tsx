@@ -1,4 +1,5 @@
 import { AppContext } from "@/context/AppContext";
+import { IRecipe } from "@/types/recipe";
 import { IUser } from "@/types/user";
 import { useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const savedUser = sessionStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  const [recipes, setRecipes] = useState<IRecipe[] | null>(null);
 
   useEffect(() => {
     if (clerkUser) {
@@ -49,10 +51,27 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const res = await fetch("https://dummyjson.com/recipes");
+        if (!res.ok) {
+          throw new Error("Recipes not found");
+        }
+        const data = await res.json();
+        setRecipes(data.recipes);
+      } catch (error) {
+        console.error("Error fetching recipes", error);
+      }
+    };
+    fetchRecipes();
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
         user,
+        recipes,
       }}
     >
       {children}
