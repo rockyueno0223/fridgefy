@@ -1,9 +1,18 @@
-import { clerkMiddleware } from "@clerk/express";
+import { AuthObject, clerkMiddleware } from "@clerk/express";
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import { UserModel } from "./models/user.model";
 import { v1router } from "./routes";
+
+declare global {
+  namespace Express {
+    interface Request {
+      auth: AuthObject;
+    }
+  }
+}
 
 const app = express();
 
@@ -19,11 +28,36 @@ app.use(clerkMiddleware());
 //routes
 app.use("/api/v1", v1router);
 
-// app.get("/current-user", async (req, res) => {
-//   const currentUser = await clerkClient.users.getUser(req.auth.userId);
+// middleware
+app.get("/current-user", async (req, res) => {
+  // @ts-ignore
+  const currentUser = await clerkClient.users.getUser(req.auth.userId);
 
-//   res.json(currentUser);
-// });
+  res.json(currentUser);
+});
+
+// 1 - validate user is authenticated
+app.use(async (req, res, next) => {
+  const userId = req.auth.userId;
+
+  if (!userId) {
+    res.status(401).json({ message: "Unauthenticated!!" });
+    return;
+  }
+
+  next();
+});
+// 2 - check if the user is already existing, if not, create user in your db
+app.use(async (req, res, next) => {
+  const user = await UserModel.findOne({ userId: req.auth.userId });
+
+  if (!user) {
+    const newUser = new UserModel({ userId: req.auth.userId });
+    await newUser.save();
+  }
+
+  next();
+});
 
 //connecting mongo db
 const MONGO_URI = process.env.DATABASE_URI!;

@@ -5,7 +5,7 @@ export const userRouter = Router();
 
 // /api/v1/users
 
-userRouter.get("/me", userController.getUserById);
+userRouter.get("/me/:id", userController.getUserById);
 
 userRouter.patch("/me/cart/add", userController.addToCart);
 userRouter.patch("/me/cart/remove", userController.removeFromCart);

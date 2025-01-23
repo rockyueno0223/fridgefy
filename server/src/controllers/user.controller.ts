@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IUSer, UserModel } from "../models/user.model";
+import { IUser, UserModel } from "../models/user.model";
 
 const getUserById = async (req: Request<{ id: string }>, res: Response) => {
   try {
@@ -10,10 +10,11 @@ const getUserById = async (req: Request<{ id: string }>, res: Response) => {
 };
 
 const addToCart = async (
-  req: Request<{ id: string }, {}, IUSer>,
+  req: Request<{ id: string }, {}, IUser>,
   res: Response
 ) => {
   try {
+    //pull verify check and send response
     const updatedCart = await UserModel.findByIdAndUpdate(
       req.params.id,
       { $push: { cart: req.body } },
@@ -28,7 +29,7 @@ const addToCart = async (
 };
 
 const removeFromCart = async (
-  req: Request<{ id: string }, {}, IUSer>,
+  req: Request<{ id: string }, {}, IUser>,
   res: Response
 ) => {
   try {
@@ -44,7 +45,7 @@ const removeFromCart = async (
 };
 
 const addToFridge = async (
-  req: Request<{ id: string }, {}, IUSer>,
+  req: Request<{ id: string }, {}, IUser>,
   res: Response
 ) => {
   try {
@@ -62,7 +63,7 @@ const addToFridge = async (
 };
 
 const removeFromFridge = async (
-  req: Request<{ id: string }, {}, IUSer>,
+  req: Request<{ id: string }, {}, IUser>,
   res: Response
 ) => {
   try {
@@ -78,7 +79,7 @@ const removeFromFridge = async (
 };
 
 const addToWishlist = async (
-  req: Request<{ id: string }, {}, IUSer>,
+  req: Request<{ id: string }, {}, IUser>,
   res: Response
 ) => {
   try {
@@ -94,7 +95,7 @@ const addToWishlist = async (
 };
 
 const removeFromWishlist = async (
-  req: Request<{ id: string }, {}, IUSer>,
+  req: Request<{ id: string }, {}, IUser>,
   res: Response
 ) => {
   try {

@@ -1,32 +1,37 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 
-export interface IUSer extends Document {
+export interface IUser {
   userId: string;
-  wishlist: string[];
-  fridge: string[];
-  cart: string[];
+  wishlist: mongoose.Schema.Types.ObjectId[];
+  fridge: mongoose.Schema.Types.ObjectId[];
+  cart: mongoose.Schema.Types.ObjectId[];
 }
 
-const UserSchema: Schema = new Schema(
+export interface IUserModel extends Model<IUser> {}
+
+const UserSchema: Schema = new Schema<IUser, IUserModel>(
   {
     userId: { type: String, required: true }, //clerk information
     wishlist: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: "Recipes",
+      ref: "Recipe",
       default: [],
     },
     fridge: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: "Ingredients",
+      ref: "Ingredient",
       default: [],
     },
     cart: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: "Ingredients",
+      ref: "Ingredient",
       default: [],
     },
   },
-  { timestamps: true, versionKey: false }
+  {
+    timestamps: true,
+    versionKey: false,
+  }
 );
 
-export const UserModel = mongoose.model<IUSer>("User", UserSchema);
+export const UserModel = mongoose.model<IUser>("User", UserSchema);
