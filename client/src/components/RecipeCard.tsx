@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from './ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Star } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 
 export interface Recipe {
