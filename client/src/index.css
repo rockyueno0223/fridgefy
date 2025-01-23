@@ -118,4 +118,6 @@
 
 body{
 background-color:  #F8FAFC;
+width: 100vw;
+overflow: hidden;
 }
