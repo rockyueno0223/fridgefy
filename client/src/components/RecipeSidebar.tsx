@@ -17,7 +17,7 @@ const recipes = [
 
 export const RecipeSidebar = () => {
   return (
-    <Sidebar className="z-10 mt-16">
+    <Sidebar className="z-10 mt-24">
       <SidebarHeader />
       <SidebarTrigger className="absolute right-0 top-4 translate-x-full" />
       <SidebarContent className="p-4">

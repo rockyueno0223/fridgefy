@@ -27,24 +27,19 @@ const RecipeCard = ({
   cookTimeMinutes,
   caloriesPerServing,
   ingredients,
-  rating,
+  // rating,
   image,
   tags,
 }:Recipe) => {
   return (
-    <Card className="w-full max-w-md overflow-hidden mb-4">
-      <div className="relative w-full h-48">
+    <Card className="w-full overflow-hidden mb-4">
+      <div className="
+      w-full h-48">
         <img
           src={image || "/api/placeholder/400/320"}
           alt={name}
           className="w-full h-full object-cover"
         />
-        <div className="absolute top-2 right-2">
-          <Badge variant="secondary" className="bg-white/90">
-            <Star className="w-4 h-4 mr-1 text-yellow-400 inline" />
-            {rating}
-          </Badge>
-        </div>
       </div>
       
       <CardHeader>
