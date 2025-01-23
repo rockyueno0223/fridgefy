@@ -1,6 +1,6 @@
 import { FridgeSidebar } from "@/components/FridgeSidebar";
 import { RecipeSidebar } from "@/components/RecipeSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/Header/Header";
 
@@ -11,14 +11,19 @@ const RootLayout = () => {
       <div className="">
         <div className="flex">
           <SidebarProvider>
+          <div className="bg-green-200 md:hidden fixed bottom-[30px] rounded-md left-4 z-1">
+            <SidebarTrigger  />
+          </div>          
             <RecipeSidebar />
           </SidebarProvider>
           
           <main className="">
             <Outlet />
           </main>
-          
           <SidebarProvider>
+          <div className="bg-green-200 md:hidden fixed bottom-[30px] rounded-md right-4 z-1 rotate-180">
+            <SidebarTrigger  />
+          </div>      
             <FridgeSidebar />
           </SidebarProvider>
         </div>

@@ -5,7 +5,7 @@ type Props = {
     isToggle: () => void
 }
 
-export const Navbar = ({ isScreen, isToggle }: Props) => {
+export const Navbar = ({ isToggle }: Props) => {
 
     return (
         <ul className="flex flex-col gap-8 font-bold bg-green-500 p-5 w-screen md:w-full md:bg-transparent md:flex-row md:p-0 md:justify-end" >
@@ -27,12 +27,6 @@ export const Navbar = ({ isScreen, isToggle }: Props) => {
                 className={({ isActive }) => `${isActive ? "text-black" : "text-white"}`}>
                 <p>Shopping List</p>
             </NavLink>
-            {isScreen ? null :
-                <>
-                    <button type="button" onClick={isToggle} className="text-white text-left">My Fridge</button>
-                    <button type="button" onClick={isToggle} className="text-white text-left"> My Recipe</button>
-                </>
-            }
         </ul>
     )
 }
