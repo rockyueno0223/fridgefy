@@ -6,7 +6,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 
 
@@ -137,11 +137,11 @@ export const ShoppingList = () => {
         }
     ])
 
-    useEffect(() => {
-        const newArray = []
-        setStoredRecipes.forEach((recipe) => recipe.ingredients)
-        setIngredients()
-    }, [])
+    // useEffect(() => {
+    //     const newArray = []
+    //     setStoredRecipes.forEach((recipe) => recipe.ingredients)
+    //     setIngredients()
+    // }, [])
 
 
     //remove selected recipe from state "storedRecipes"
