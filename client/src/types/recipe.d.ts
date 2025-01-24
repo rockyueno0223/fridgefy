@@ -1,7 +1,7 @@
 export interface IRecipe {
   id: string;
   name: string;
-  ingredients: string[];
+  ingredients: IIngredient[];
   instructions: string[];
   prepTimeMinutes: number;
   cookTimeMinutes: number;

@@ -55,8 +55,8 @@ const RecipeCard = ({
             Ingredients:{" "}
           </div>
           {ingredients.map((item) => (
-            <Badge key={item} variant="secondary">
-              {item}
+            <Badge key={item.id} variant="secondary">
+              {item.name}
             </Badge>
           ))}
         </div>
