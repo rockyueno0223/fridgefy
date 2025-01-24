@@ -11,7 +11,7 @@ import { useEffect, useState } from "react"
 
 
 export const ShoppingList = () => {
-    const [ingredients, setIngredients] = useState<string[]>(["A", "B", "C"])
+    const [ingredients, setIngredients] = useState<string[]>([])
     const [storedRecipes, setStoredRecipes] = useState<Recipe[]>([
         {
             "id": 1,
@@ -137,7 +137,11 @@ export const ShoppingList = () => {
         }
     ])
 
-    useEffect(() => { }, [])
+    useEffect(() => {
+        const newArray = []
+        setStoredRecipes.forEach((recipe) => recipe.ingredients)
+        setIngredients()
+    }, [])
 
 
     //remove selected recipe from state "storedRecipes"
