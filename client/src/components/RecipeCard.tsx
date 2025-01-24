@@ -1,25 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from './ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Clock } from 'lucide-react';
-
-
-export interface Recipe {
-  id: number;
-  name: string;
-  ingredients: string[];
-  instructions: string[];
-  prepTimeMinutes: number;
-  cookTimeMinutes: number;
-  cuisine: string;
-  caloriesPerServing: number;
-  tags: string[];
-  userId: number;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  mealType: string[];
-}
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { IRecipe } from "@/types/recipe";
+import { Clock } from "lucide-react";
+import { Button } from "./ui/button";
 
 const RecipeCard = ({
   name,
@@ -30,21 +13,23 @@ const RecipeCard = ({
   // rating,
   image,
   tags,
-}:Recipe) => {
+}: IRecipe) => {
   return (
     <Card className="w-full overflow-hidden mb-4">
-      <div className="
-      w-full h-48">
+      <div
+        className="
+      w-full h-48"
+      >
         <img
           src={image || "/api/placeholder/400/320"}
           alt={name}
           className="w-full h-full object-cover"
         />
       </div>
-      
+
       <CardHeader>
         <div className="flex flex-wrap gap-2 mb-2">
-          {tags.map(tag => (
+          {tags.map((tag) => (
             <Badge key={tag} variant="outline" className="text-xs">
               {tag}
             </Badge>
@@ -66,22 +51,21 @@ const RecipeCard = ({
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-        <div className="flex justify-start items-center text-gray-500">Ingredients: </div>
-          {ingredients.map(item => (
-            <Badge key={item} variant="secondary">
-              {item}
+          <div className="flex justify-start items-center text-gray-500">
+            Ingredients:{" "}
+          </div>
+          {ingredients.map((item) => (
+            <Badge key={item.id} variant="secondary">
+              {item.name}
             </Badge>
           ))}
         </div>
       </CardContent>
-      <div className = "w-full flex justify-center items-center p-2 space-x-2">
-        <Button
-      variant={'outline'}
-      className='w-full'
-      >More</Button>
-        <Button
-        className='w-full'
-        >Add</Button>
+      <div className="w-full flex justify-center items-center p-2 space-x-2">
+        <Button variant={"outline"} className="w-full">
+          More
+        </Button>
+        <Button className="w-full">Add</Button>
       </div>
     </Card>
   );
