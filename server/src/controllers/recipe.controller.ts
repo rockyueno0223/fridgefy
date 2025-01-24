@@ -1,9 +1,13 @@
 import { Request, Response } from "express";
+import { IngredientModel } from "../models/ingredient.model";
 import { RecipeModel } from "../models/recipe.model";
 
 const getRecipes = async (req: Request, res: Response) => {
   try {
-    const recipes = await RecipeModel.find();
+    const recipes = await RecipeModel.find()
+      .populate({ path: "ingredients", model: IngredientModel })
+      .lean()
+      .exec();
     res.json(recipes);
   } catch (err) {
     console.error(err);
@@ -13,7 +17,10 @@ const getRecipes = async (req: Request, res: Response) => {
 
 const getRecipeById = async (req: Request<{ id: string }>, res: Response) => {
   try {
-    const recipe = await RecipeModel.findById(req.params.id);
+    const recipe = await RecipeModel.findById(req.params.id).populate({
+      path: "ingredients",
+      model: IngredientModel,
+    });
     if (!recipe) {
       res.status(404).json({ message: "Recipe does not exist" });
       return;

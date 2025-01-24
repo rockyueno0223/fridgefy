@@ -20,9 +20,7 @@ export const FridgeSidebar = () => {
       <Sidebar side="left"
       className="z-10 mt-24"
     >
-      <div className=" bg-green-200 bottom-[30px] rounded-md">
-        <SidebarTrigger className="absolute left-0 top-4 -translate-x-full rotate-180" />
-      </div>
+        <SidebarTrigger className="absolute right-0 top-4 translate-x-full" />
         <SidebarHeader />
         <SidebarContent className="p-4">
           <SidebarGroupLabel className="text-xl">Fridge</SidebarGroupLabel>

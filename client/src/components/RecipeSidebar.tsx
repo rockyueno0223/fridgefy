@@ -19,9 +19,7 @@ export const RecipeSidebar = () => {
   return (
       <Sidebar className="z-10 mt-24" side="right">
         <SidebarHeader />
-        <div className=" bg-green-200 bottom-[30px] rounded-md">
-          <SidebarTrigger className="absolute right-0 top-4 translate-x-full" />
-        </div>
+          <SidebarTrigger className="absolute left-0 top-4 -translate-x-full rotate-180" />
         <SidebarContent className="p-4">
           <SidebarGroupLabel className="text-xl">Recipes</SidebarGroupLabel>
           <SidebarGroupContent>
