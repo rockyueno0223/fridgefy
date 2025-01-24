@@ -124,6 +124,7 @@ overflow: scroll;
 }
 
 main{
+  box-sizing: content-box;
   width: max-content;
   max-width: 100vw;
 }

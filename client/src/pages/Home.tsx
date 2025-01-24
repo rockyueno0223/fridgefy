@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom"
 export const Home = () => {
     return (
         <>
-            <div className="w-max max-w-screen flex flex-col gap-8 text-amber-950 items-start pt-20 pl-10 lg:pl-0 pr-0 lg:pr-40 overflow-hidden">
+            <div className="w-max max-w-screen flex flex-col gap-8 text-amber-950 items-start pt-20  pl-5 sm:pl-10 lg:pl-40 pr-0 lg:pr-40 overflow-hidden">
                 <div className=" dm-serif-text-home-title flex-wrap">
                     <h1>Smart Meals</h1>
                     <h1>Effortless Cooking</h1>
