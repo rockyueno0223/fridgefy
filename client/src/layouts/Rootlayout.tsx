@@ -16,7 +16,7 @@ const RootLayout = () => {
         <div className="flex">
           <SidebarProvider>
             <div className="bg-green-200 md:hidden fixed bottom-[30px] rounded-md left-4 z-50">
-              <SidebarTrigger className="[&>svg]:hidden" />
+              <SidebarTrigger />
             </div>          
             <FridgeSidebar />
           </SidebarProvider>
@@ -27,7 +27,7 @@ const RootLayout = () => {
           
           <SidebarProvider>
             <div className="bg-green-200 md:hidden fixed bottom-[30px] rounded-md right-4 z-50">
-              <SidebarTrigger className="[&>svg]:hidden" />
+              <SidebarTrigger className="rotate-180"/>
             </div>      
             {location.pathname === "/recipes" ? (
               <RecipeSidebar />
