@@ -25,21 +25,16 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           setLoadingUser(true);
 
-          // const res = await fetch(`/api/users/me`);
-          // if (!res.ok) {
-          //   throw new Error("User not found");
-          // }
-          // const data = await res.json();
+          const res = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/${
+              clerkUser.id
+            }`
+          );
+          if (!res.ok) {
+            throw new Error("User not found");
+          }
+          const data = await res.json();
 
-          // Mock user data
-          const data = {
-            id: "1",
-            fridge: ["1", "2", "3"],
-            cart: ["4", "5", "6"],
-            wishlist: ["7", "8", "9"],
-            createdAt: "2021-10-01T00:00:00.000Z",
-            updatedAt: "2021-10-01T00:00:00.000Z",
-          };
           setUser(data);
           setUserError(null);
         } catch (error) {
@@ -68,12 +63,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         setLoadingRecipes(true);
 
-        const res = await fetch("https://dummyjson.com/recipes");
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/recipes`
+        );
         if (!res.ok) {
           throw new Error("Recipes not found");
         }
         const data = await res.json();
-        setRecipes(data.recipes);
+        setRecipes(data);
         setRecipesError(null);
       } catch (error) {
         console.error("Error fetching recipes", error);
