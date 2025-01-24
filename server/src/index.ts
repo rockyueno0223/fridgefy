@@ -44,7 +44,6 @@ app.use(async (req, res, next) => {
     res.status(401).json({ message: "Unauthenticated!!" });
     return;
   }
-
   next();
 });
 // 2 - check if the user is already existing, if not, create user in your db
