@@ -6,12 +6,17 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
+
+export type Ingredient = {
+    id: number,
+    name: string
+}
 
 export const ShoppingList = () => {
-    const [ingredients, setIngredients] = useState<string[]>([])
+    const [ingredients, setIngredients] = useState<Ingredient[]>([])
     const [storedRecipes, setStoredRecipes] = useState<Recipe[]>([
         {
             "id": 1,
@@ -137,11 +142,15 @@ export const ShoppingList = () => {
         }
     ])
 
-    // useEffect(() => {
-    //     const newArray = []
-    //     setStoredRecipes.forEach((recipe) => recipe.ingredients)
-    //     setIngredients()
-    // }, [])
+    useEffect(() => {
+
+        //all "StoredRecipes" 's ingredients are stored in "Ingredients"
+        const newArray: any = []
+        storedRecipes.forEach((recipe: Recipe) => newArray.push(...recipe.ingredients))
+        const objectArray: Ingredient[] = newArray.map((name: string, index: number) => ({ id: Number(index + 1), name: String(name) }))
+        setIngredients(_prev => _prev = objectArray)
+
+    }, [storedRecipes])
 
 
     //remove selected recipe from state "storedRecipes"
@@ -150,37 +159,42 @@ export const ShoppingList = () => {
     }
 
     return (
-        <div className="accordion-container max-w-screen w-max">
+        <>
+            <div className="accordion-container max-w-screen w-screen  px-16 pt-10 md:w-max">
+                <h1 className="font-bold pb-5 text-xl">My Recipes</h1>
 
-            {storedRecipes.map((recipe) =>
-                <Accordion key={recipe.id} type="single" collapsible >
-                    <AccordionItem value={recipe.id.toString()}>
-                        <AccordionTrigger>{recipe.name}</AccordionTrigger>
-                        <AccordionContent>
-                            <div className="flex flex-col gap-5">
-                                <ul className="flex flex-col gap-3">
-                                    {recipe.ingredients.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}
-                                </ul>
-                                <div>
-                                    <Button onClick={() => handleRemove(recipe.id)}> Remove </Button>
+                {storedRecipes.map((recipe) =>
+                    <Accordion key={recipe.id} type="single" collapsible >
+                        <AccordionItem value={recipe.id.toString()}>
+                            <AccordionTrigger>{recipe.name}</AccordionTrigger>
+                            <AccordionContent>
+                                <div className="flex flex-col gap-5">
+                                    <ul className="flex flex-col gap-3">
+                                        {recipe.ingredients.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}
+                                    </ul>
+                                    <div>
+                                        <Button onClick={() => handleRemove(recipe.id)}> Remove </Button>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </AccordionContent>
-                    </AccordionItem>
-                </Accordion>
-            )
-            }
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                )
+                }
 
-            <div>
+
+                {/* Below is going to be stored in CartList */}
+                {/* <div>
                 <h2>Ingredients (test list)</h2>
                 <ul>
-                    {ingredients.map((ingredient) => <li>{ingredient}</li>)}
+                    {ingredients.map((ingredient) => <li key={ingredient.id}>{ingredient.name} </li>)}
                 </ul>
-            </div>
+            </div> */}
 
 
-        </div >
+            </div >
+        </>
     )
 }
 

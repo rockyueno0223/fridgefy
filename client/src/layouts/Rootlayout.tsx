@@ -1,3 +1,4 @@
+import { CartSidebar } from "@/components/CartSideBar";
 import { FridgeSidebar } from "@/components/FridgeSidebar";
 import { RecipeSidebar } from "@/components/RecipeSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -33,8 +34,7 @@ const RootLayout = () => {
             {location.pathname === "/recipes" ? (
               <RecipeSidebar />
             ) : (
-              // TODO Add items sidebar here
-              <>sidebar</>
+              <CartSidebar />
             )}
           </SidebarProvider>
         </div>
