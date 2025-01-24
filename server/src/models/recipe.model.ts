@@ -1,8 +1,8 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface IRecipe extends Document {
   name: string;
-  ingredients: string[];
+  ingredients: mongoose.Schema.Types.ObjectId[];
   instructions: string[];
   prepTimeMinutes: number;
   cookTimeMinutes: number;
@@ -19,15 +19,17 @@ export interface IRecipe extends Document {
 }
 
 // defined the mongoose schema based on the type above
-const RecipeSchema: Schema = new Schema(
+const RecipeSchema: Schema = new Schema<IRecipe, Model<IRecipe>>(
   {
     id: Number,
     name: { type: String, required: true },
-    ingredients: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "Ingredient",
-      default: [],
-    },
+    ingredients: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Ingredient",
+        default: [],
+      },
+    ],
     instructions: { type: [String], required: true },
     prepTimeMinutes: { type: Number, required: true },
     cookTimeMinutes: { type: Number, required: true },
