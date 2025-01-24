@@ -5,11 +5,13 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion"
-import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
 
 
 
 export const ShoppingList = () => {
+    const [ingredients, setIngredients] = useState<string[]>(["A", "B", "C"])
     const [storedRecipes, setStoredRecipes] = useState<Recipe[]>([
         {
             "id": 1,
@@ -135,23 +137,46 @@ export const ShoppingList = () => {
         }
     ])
 
+    useEffect(() => { }, [])
+
+
+    //remove selected recipe from state "storedRecipes"
+    const handleRemove = (id: number) => {
+        setStoredRecipes(prevState => prevState.filter(prev => prev.id !== id))
+    }
 
     return (
         <div className="accordion-container max-w-screen w-max">
 
             {storedRecipes.map((recipe) =>
-                <Accordion key={recipe.id} type="single" collapsible>
-                    <AccordionItem value="item-1">
+                <Accordion key={recipe.id} type="single" collapsible >
+                    <AccordionItem value={recipe.id.toString()}>
                         <AccordionTrigger>{recipe.name}</AccordionTrigger>
                         <AccordionContent>
-                            {recipe.id}-{recipe.name}
+                            <div className="flex flex-col gap-5">
+                                <ul className="flex flex-col gap-3">
+                                    {recipe.ingredients.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}
+                                </ul>
+                                <div>
+                                    <Button onClick={() => handleRemove(recipe.id)}> Remove </Button>
+                                </div>
+                            </div>
+
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
-            )}
+            )
+            }
+
+            <div>
+                <h2>Ingredients (test list)</h2>
+                <ul>
+                    {ingredients.map((ingredient) => <li>{ingredient}</li>)}
+                </ul>
+            </div>
 
 
-        </div>
+        </div >
     )
 }
 

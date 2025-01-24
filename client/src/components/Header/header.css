@@ -2,12 +2,7 @@
 
 .shown {
     transform: translateY(74);
-<<<<<<< HEAD
     z-index: 50
-=======
-    z-index: 50
->>>>>>> dev
-
 }
 
 .hidden {
