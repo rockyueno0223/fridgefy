@@ -4,8 +4,7 @@ import userController from "../controllers/user.controller";
 export const userRouter = Router();
 
 // /api/v1/users
-
-userRouter.get("/me/:id", userController.getUserById);
+userRouter.get("/me", userController.getUserPopulated);
 
 userRouter.patch("/me/cart/add", userController.addToCart);
 userRouter.patch("/me/cart/remove", userController.removeFromCart);

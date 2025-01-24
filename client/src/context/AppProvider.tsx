@@ -1,16 +1,14 @@
 import { AppContext } from "@/context/AppContext";
 import { IRecipe } from "@/types/recipe";
 import { IUser } from "@/types/user";
-import { useUser } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const { user: clerkUser } = useUser();
+  const { getToken } = useAuth();
 
-  const [user, setUser] = useState<IUser | null>(() => {
-    const savedUser = sessionStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [user, setUser] = useState<IUser | null>(null);
   const [recipes, setRecipes] = useState<IRecipe[] | null>(null);
 
   const [loadingUser, setLoadingUser] = useState<boolean>(false);
@@ -26,9 +24,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           setLoadingUser(true);
 
           const res = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/${
-              clerkUser.id
-            }`
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me`,
+            {
+              headers: {
+                Authorization: `Bearer ${await getToken()}`,
+              },
+            }
           );
           if (!res.ok) {
             throw new Error("User not found");
@@ -49,14 +50,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(null);
     }
   }, [clerkUser]);
-
-  useEffect(() => {
-    if (user) {
-      sessionStorage.setItem("user", JSON.stringify(user));
-    } else {
-      sessionStorage.removeItem("user");
-    }
-  }, [user]);
 
   useEffect(() => {
     const fetchRecipes = async () => {

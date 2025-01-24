@@ -1,9 +1,21 @@
 import { Request, Response } from "express";
+import { IngredientModel } from "../models/ingredient.model";
+import { RecipeModel } from "../models/recipe.model";
 import { IUser, UserModel } from "../models/user.model";
 
-const getUserById = async (req: Request<{ id: string }>, res: Response) => {
+const getUserPopulated = async (req: Request, res: Response) => {
   try {
-    const user = await UserModel.findById(req.params.id);
+    const user = await UserModel.findOne({ userId: req.auth.userId })
+      .populate({ path: "cart", model: IngredientModel })
+      .populate({ path: "fridge", model: IngredientModel })
+      .populate({ path: "wishlist", model: RecipeModel })
+      .lean()
+      .exec();
+    if (!user) {
+      res.status(404).json({ message: "User does not exist" });
+      return;
+    }
+    res.status(200).json(user);
   } catch (err) {
     console.error(err);
   }
@@ -111,7 +123,7 @@ const removeFromWishlist = async (
 };
 
 export default {
-  getUserById,
+  getUserPopulated,
   addToCart,
   removeFromCart,
   addToFridge,
