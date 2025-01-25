@@ -87,23 +87,16 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<IIngredient[]>([])
   const [fridge, setFridge] = useState<IIngredient[]>([])
   const [fridgeInput, setFridgeInput] = useState<string>("")
-  const [ingredientsResults, setIngredientsResults] = useState<IIngredient[]>([])
+  const [searchIngredientResults, setSearchIngredientResults] = useState<IIngredient[]>([])
 
 
 
-  // below is to check Ingredient is duplicate or not (targetList=> cart[] or fridge[])
-  const checkIsUnique = (ingredientItem: IIngredient, targetList: IIngredient[]): boolean => {
-    if (targetList.some(item => item.id === ingredientItem.id)) {
-      return false
-    } else return true
-  }
-
-  // Input search (input onchange={()=>handleSearch(value)} )
+  // Fridge Input search (input onchange={()=>handleSearch(value)} )
   const handleFridgeSearch = (value: string) => {
     setFridgeInput(_prev => value)
   }
 
-  // Once the input value change > get results from BE
+  // Once the Fridge input value change > get results from BE
   useEffect(() => {
     const ingredientSearch = (value: string) => {
       const fetchResults = async () => {
@@ -114,7 +107,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           throw new Error("Recipes not found");
         }
         const data = await res.json();
-        setIngredientsResults((_prev: any) => data)
+        setSearchIngredientResults((_prev: any) => data)
       }
       fetchResults()
     }
@@ -124,27 +117,111 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, [fridgeInput])
 
 
-  //handle Add to Cart (++checkIsUnique)
-
-  //handle Add to Fridge (++checkIsUnique)
-  const addToFridge = (id: string) => {
-
-    const updateData = async () => {
-      const addData = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/fridge/add}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ingredient }),
-      })
-
+  //get Ingredient by Id
+  const fetchIngredientById = async (id: string): Promise<IIngredient> => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/ingredients/${id}`)
+    if (!res.ok) {
+      throw new Error("Ingredient not found");
     }
-
-
-
+    return res.json();
   }
 
-  //Fridge(rm) > Cart(add)
+  //Update Ingredient data to Target
+  const updateData = async (id: IIngredient["id"], target: string, action: "add" | "remove") => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/${target}/${action}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      })
+      if (!res.ok) {
+        throw new Error(`Failed to ${action} ingredient -- ${target}`)
+      }
+      return res.ok
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
 
-  //Cart(rm) > Fridge(add)
+
+  // check the Unique Ingredient
+  const checkIngredientIsUnique = (id: string): boolean => {
+    return !cart.some(item => item.id === id) && !fridge.some(item => item.id === id);
+  }
+
+  //handle Add to Fridge
+  const addToFridge = async (id: string) => {
+    try {
+
+      if (!checkIngredientIsUnique(id)) {
+        alert("This ingredient is already in Fridge or Cart!");
+        return;
+      }
+
+      const ingredient = await fetchIngredientById(id) //fetch Ingredient data by id
+      const success = await updateData(id, "fridge", "add") // BE store ID only
+
+      if (success) {
+        setFridge((prev: IIngredient[]) => [...prev, ingredient])
+      }
+
+    } catch (error) {
+      console.error(`Cannot add ingredient to Fridge-${error}`)
+    }
+  }
+
+  //handle Add to Cart
+  const addToCart = async (id: string) => {
+    try {
+
+      if (!checkIngredientIsUnique(id)) {
+        alert("This ingredient is already in Fridge or Cart!");
+        return;
+      }
+
+      const ingredient = await fetchIngredientById(id)
+      const success = await updateData(id, "cart", "add")
+
+      if (success) {
+        setCart((prev: IIngredient[]) => [...prev, ingredient])
+      }
+
+    } catch (error) {
+      console.error(`Cannot add ingredient to Cart-${error}`)
+    }
+  }
+
+  // handle remove from Fridge
+  const removeFromFridge = async (id: string) => {
+    try {
+      const success = await updateData(id, "fridge", "remove")
+      if (success) {
+        setFridge((prev: IIngredient[]) => prev.filter(item => item.id !== id))
+      }
+
+    } catch (error) {
+      console.error(`Cannot remove ingredient to Fridge-${error}`)
+    }
+  }
+
+  // handle remove from Cart
+  const removeFromCart = async (id: string) => {
+    try {
+      const success = await updateData(id, "cart", "remove")
+      if (success) {
+        setCart((prev: IIngredient[]) => prev.filter(item => item.id !== id))
+      }
+
+    } catch (error) {
+      console.error(`Cannot remove ingredient to Cart-${error}`)
+    }
+  }
+
+
+  // >>> Move both side <<< or is this both optional?
+  // 1. Fridge(rm) > Cart(add)
+  // 2. Cart(rm) > Fridge(add)
 
 
   return (
