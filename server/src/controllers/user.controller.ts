@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import { IngredientModel } from "../models/ingredient.model";
 import { RecipeModel } from "../models/recipe.model";
 import { IUser, UserModel } from "../models/user.model";
@@ -22,34 +23,53 @@ const getUserPopulated = async (req: Request, res: Response) => {
 };
 
 const addToCart = async (
-  req: Request<{ id: string }, {}, IUser>,
+  req: Request<{}, {}, { ingredientIds: mongoose.Types.ObjectId[] }>,
   res: Response
 ) => {
+  const ingredientIds = req.body.ingredientIds;
   try {
-    //pull verify check and send response
-    const updatedCart = await UserModel.findByIdAndUpdate(
-      req.params.id,
-      { $push: { cart: req.body } },
+    const user = await UserModel.findOneAndUpdate(
+      { userId: req.auth.userId },
+      { $push: { cart: { $each: ingredientIds } } },
       { new: true }
-    );
-    //extra logic that prevents if its on fridge do not add to cart
-    res.json(updatedCart);
+    ).populate({ path: "cart", model: IngredientModel });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    res.status(201).json({ success: true, cart: user.cart });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Unable to add to cart" });
+    res.status(500).json({ success: false, message: "Unable to add to cart" });
   }
 };
 
 const removeFromCart = async (
-  req: Request<{ id: string }, {}, IUser>,
+  req: Request<{}, {}, { ingredientIds: mongoose.Types.ObjectId[] }>,
   res: Response
 ) => {
+  const ingredientIds = req.body.ingredientIds;
   try {
-    const updatedCart = await UserModel.findByIdAndUpdate(
-      req.params.id,
-      { $pull: { cart: req.body } },
+    const user = await UserModel.findOneAndUpdate(
+      { userId: req.auth.userId },
+      { $pull: { cart: { $in: ingredientIds } } },
       { new: true }
-    );
+    ).populate({ path: "cart", model: IngredientModel });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    res.status(200).json({ success: true, cart: user.cart });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Unable to remove from cart" });
