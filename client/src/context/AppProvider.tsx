@@ -1,4 +1,5 @@
 import { AppContext } from "@/context/AppContext";
+import { IIngredient } from "@/types/ingredient";
 import { IRecipe } from "@/types/recipe";
 import { IUser } from "@/types/user";
 import { useUser } from "@clerk/clerk-react";
@@ -26,8 +27,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           setLoadingUser(true);
 
           const res = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/${
-              clerkUser.id
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/${clerkUser.id
             }`
           );
           if (!res.ok) {
@@ -81,6 +81,71 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     };
     fetchRecipes();
   }, []);
+
+
+  // Cart & Fridge demo
+  const [cart, setCart] = useState<IIngredient[]>([])
+  const [fridge, setFridge] = useState<IIngredient[]>([])
+  const [fridgeInput, setFridgeInput] = useState<string>("")
+  const [ingredientsResults, setIngredientsResults] = useState<IIngredient[]>([])
+
+
+
+  // below is to check Ingredient is duplicate or not (targetList=> cart[] or fridge[])
+  const checkIsUnique = (ingredientItem: IIngredient, targetList: IIngredient[]): boolean => {
+    if (targetList.some(item => item.id === ingredientItem.id)) {
+      return false
+    } else return true
+  }
+
+  // Input search (input onchange={()=>handleSearch(value)} )
+  const handleFridgeSearch = (value: string) => {
+    setFridgeInput(_prev => value)
+  }
+
+  // Once the input value change > get results from BE
+  useEffect(() => {
+    const ingredientSearch = (value: string) => {
+      const fetchResults = async () => {
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/ingredients/search?q=${value}}`
+        );
+        if (!res.ok) {
+          throw new Error("Recipes not found");
+        }
+        const data = await res.json();
+        setIngredientsResults((_prev: any) => data)
+      }
+      fetchResults()
+    }
+
+    ingredientSearch(fridgeInput)
+    return (setFridgeInput(_prev => ""))
+  }, [fridgeInput])
+
+
+  //handle Add to Cart (++checkIsUnique)
+
+  //handle Add to Fridge (++checkIsUnique)
+  const addToFridge = (id: string) => {
+
+    const updateData = async () => {
+      const addData = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/fridge/add}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ingredient }),
+      })
+
+    }
+
+
+
+  }
+
+  //Fridge(rm) > Cart(add)
+
+  //Cart(rm) > Fridge(add)
+
 
   return (
     <AppContext.Provider

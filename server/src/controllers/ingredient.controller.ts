@@ -13,12 +13,7 @@ const searchIngredientbyQuery = async (req: Request, res: Response): Promise<voi
     }
 }
 
-// get Fridge
-//const getFridge = async ()=>{}
 
-
-// get Cart
-//const getCart = async()=>{}
 
 
 
