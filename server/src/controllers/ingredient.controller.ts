@@ -9,19 +9,21 @@ const searchIngredientbyQuery = async (req: Request, res: Response): Promise<voi
         const results = await IngredientModel.find({ name: { $regex: query, $options: 'i' } })
         res.json(results)
     } catch (err) {
-        throw new Error(`error: cannot search ingredients from backend${Error}`)
+        throw new Error(`error: cannot search ingredients from backend - ${Error}`)
     }
 }
 
-// get Fridge
-//const getFridge = async ()=>{}
-
-
-// get Cart
-//const getCart = async()=>{}
-
-
+// get the Ingredient by Id
+const getIngredientById = async (req: Request<{ id: string }>, res: Response) => {
+    try {
+        const result = await IngredientModel.findById(req.params.id)
+        res.json(result)
+    } catch (err) {
+        throw new Error(`error: cannot get ingredient by Id - ${Error}`)
+    }
+}
 
 export default {
-    searchIngredientbyQuery
+    searchIngredientbyQuery,
+    getIngredientById
 }
