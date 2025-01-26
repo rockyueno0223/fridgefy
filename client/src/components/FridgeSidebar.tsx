@@ -1,4 +1,3 @@
-import { useState } from "react";
 import SearchFridge from "./SearchFridge";
 import {
   Sidebar,
@@ -17,18 +16,7 @@ const fridgeItems = [
   { id: 3, name: "Cheese" },
 ];
 
-type IIngredient = {
-  id: string;
-  name: string;
-};
 export const FridgeSidebar = () => {
-  const [result, setResult] = useState<string[]>([]);
-
-  const handleSearch = (query: string): void => {
-    const searchTerm = query.toLowerCase();
-    setResult(searchTerm);
-  };
-
   return (
     <Sidebar side="left" className="z-10 mt-24">
       <SidebarTrigger className="absolute right-0 top-4 translate-x-full" />
@@ -37,8 +25,7 @@ export const FridgeSidebar = () => {
         <SidebarGroupLabel className="text-xl">Fridge</SidebarGroupLabel>
         <SidebarGroupContent>
           <div className="mb-6">
-            <SearchFridge onSearch={handleSearch} />
-            {/* <SearchFridgeResults results={result}> */}
+            <SearchFridge />
           </div>
           <ul className="space-y-2">
             {fridgeItems.map((item) => (
