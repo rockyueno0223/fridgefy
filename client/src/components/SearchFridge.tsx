@@ -12,15 +12,17 @@ export default function SearchFridge() {
   const debouncedInput = useDebounce(input, 1000);
 
   // useEffect(() => {
-  const getIngredientsByQuery = async (query: string) => {
-    const res = await fetch(
-      `http://localhost:3400/api/v1/ingredients/search?q=${query}`
-    );
-    const data = await res.json();
-    console.log(data);
-    setResults(data);
-  };
-  getIngredientsByQuery(debouncedInput);
+  // const getIngredientsByQuery = async (query: string) => {
+  //   const res = await fetch(
+  //     `http://localhost:3400/api/v1/ingredients/search?q=${query}`
+  //   );
+  //   const data = await res.json();
+  //   const ingredients = data.filter((ingredient: Ingredient) =>
+  //     ingredient.name.includes(query)
+  //   );
+  //   setResults(ingredients);
+  // };
+  // getIngredientsByQuery(debouncedInput);
   // }, [debouncedInput]);
 
   const handleChange = (query: string) => {
