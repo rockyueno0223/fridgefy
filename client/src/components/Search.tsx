@@ -1,6 +1,6 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
-import { Search as SearchIcon } from 'lucide-react';
+import { Search as SearchIcon } from "lucide-react";
 
 interface SearchProps {
   onSearch: (query: string) => void;
@@ -17,7 +17,9 @@ const Search = ({ onSearch }: SearchProps) => {
           type="text"
           placeholder="Search recipes..."
           className="flex-1 border-none focus:ring-0 focus:outline-none"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => onSearch(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onSearch(e.target.value)
+          }
         />
       </div>
     </div>
