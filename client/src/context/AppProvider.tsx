@@ -5,7 +5,6 @@ import { IUser } from "@/types/user";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 
-const WISHLIST_KEY = "recipe-wishlist";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const { user: clerkUser } = useUser();
@@ -21,9 +20,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [loadingRecipes, setLoadingRecipes] = useState<boolean>(false);
   const [recipesError, setRecipesError] = useState<string | null>(null);
 
-  const [wishlist, setWishlist] = useState<string[]>(() => {
-    return JSON.parse(localStorage.getItem(WISHLIST_KEY) || "[]");
-  });
+  const [wishlist, setWishlist] = useState<IUser["wishlist"]>([]);
 
   useEffect(() => {
     if (clerkUser) {
@@ -45,6 +42,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           const data = await res.json();
 
           setUser(data);
+          setWishlist(data.wishlist)
           setUserError(null);
         } catch (error) {
           console.error("Error fetching user", error);
@@ -232,17 +230,59 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   // ↑its needed for responsivenes
 
-  // wishlist
-  useEffect(() => {
-    localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
-  }, [wishlist]);
-  const addToWishlist = (recipeId: string) => {
-    setWishlist((prev) =>
-      prev.includes(recipeId) ? prev : [...prev, recipeId]
-    );
+  // wishlist 
+  // Add to wishlist
+  const addToWishlist = async (recipeId: string) => {
+    if (user?.wishlist.some(reicpe => reicpe._id === recipeId)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `http://localhost:3400/api/v1/users/me/wishlist/add`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ingredientId: recipeId }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setWishlist(() => data.wishlist);
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error adding to wishlist", error);
+    }
   };
-  const removeFromWishlist = (recipeId: string) => {
-    setWishlist((prev) => prev.filter((id) => id !== recipeId));
+
+  // Remove from wishlist
+  const removeFromWishlist = async (recipeId: string) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/wishlist/remove`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ingredientId: recipeId }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setWishlist(data.wishlist);
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error removing from wishlist", error);
+    }
   };
   return (
     <AppContext.Provider

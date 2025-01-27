@@ -7,7 +7,7 @@ import { useAppContext } from "@/context/AppContext";
 
 
 const RecipeCard = ({
-  id,
+  _id,
   name,
   prepTimeMinutes,
   cookTimeMinutes,
@@ -18,12 +18,12 @@ const RecipeCard = ({
   tags,
 }: IRecipe) => {
   const { wishlist, addToWishlist, removeFromWishlist } = useAppContext();
-  const isInWishlist = wishlist.includes(id);
+  const isInWishlist = wishlist.includes(_id);
 
   return (
     <Card className="w-full overflow-hidden mb-4">
       <div className="w-full h-48">
-        <img src={image || "/api/placeholder/400/320"} alt={name} className="w-full h-full object-cover" />
+        <img src={image} alt={name} className="w-full h-full object-cover" />
       </div>
 
       <CardHeader>
@@ -66,7 +66,7 @@ const RecipeCard = ({
         <Button
           className="w-full"
           variant={isInWishlist ? "destructive" : "default"}
-          onClick={() => (isInWishlist ? removeFromWishlist(id) : addToWishlist(id))}
+          onClick={() => (isInWishlist ? removeFromWishlist(_id) : addToWishlist(_id))}
         >
           {isInWishlist ? "Remove" : "Add"}
         </Button>

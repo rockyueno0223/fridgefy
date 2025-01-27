@@ -10,7 +10,9 @@ type AppContextType = {
   userError: string | null;
   loadingRecipes: boolean;
   recipesError: string | null;
-  wishlist: string[];
+
+  wishlist: IRecipe[] ;
+
   addToWishlist: (recipeId: string) => void;
   removeFromWishlist: (recipeId: string) => void;
   addToFridge: (id: string) => Promise<void>;
