@@ -9,6 +9,6 @@ export const v1router = Router();
 
 v1router.use("/recipes", recipesRouter);
 
-v1router.use(protectedRouter);
+v1router.use("/users", protectedRouter);
 
 v1router.use("/ingredients", ingredientRouter);
