@@ -45,9 +45,9 @@ export const Header = () => {
 
     return (
         <header className="flex flex-col sticky top-0 left-0">
-            <div className='border-current border-1 flex gap-8 p-5 items-center bg-green-500 '>
+            <div className='border-current border-1 flex gap-8 p-5 items-center bg-[#8FBC8B]'>
 
-                <div className='logo-container font-bold text-xl'>
+                <div className='logo-container font-bold text-3xl text-white'>
                     <NavLink to="/"><h3>Frigefy</h3></NavLink>
                 </div>
 
