@@ -14,11 +14,11 @@ import { IRecipe } from "@/types/recipe";
 
 export const RecipeSidebar = () => {
   const { recipes, loadingRecipes, wishlist, removeFromWishlist } = useAppContext();
-  const [wishlistItems, setWishlistItems] = useState<IRecipe[]>([]);
+  // const [wishlistItems, setWishlistItems] = useState<IRecipe[]>([]);
 
-  useEffect(() => {
-    setWishlistItems((recipes ?? []).filter((recipe) => wishlist.includes(recipe.id)));
-  }, [recipes, wishlist]);
+  // useEffect(() => {
+  //   setWishlistItems((recipes ?? []).filter((recipe) => wishlist.includes(recipe._id)));
+  // }, [recipes, wishlist]);
   
 
   return (
@@ -30,12 +30,12 @@ export const RecipeSidebar = () => {
         <SidebarGroupContent>
           {loadingRecipes ? (
             <div className="text-center py-4">Loading...</div>
-          ) : wishlistItems.length > 0 ? (
+          ) : wishlist.length > 0 ? (
             <ul className="space-y-2">
-              {wishlistItems?.map((recipe) => (
-                <li key={recipe.id} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md">
+              {wishlist?.map((recipe) => (
+                <li key={recipe._id} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md">
                   <span className="flex-1">{recipe.name}</span>
-                  <button onClick={() => removeFromWishlist(recipe.id)} className="text-gray-500 hover:text-red-500 transition-colors px-2">
+                  <button onClick={() => removeFromWishlist(recipe._id)} className="text-gray-500 hover:text-red-500 transition-colors px-2">
                     &#215;
                   </button>
                 </li>
@@ -47,7 +47,7 @@ export const RecipeSidebar = () => {
         </SidebarGroupContent>
       </SidebarContent>
       <SidebarFooter className="p-4 text-sm text-gray-500 text-center">
-        {wishlistItems.length} items
+        {wishlist.length} items
       </SidebarFooter>
     </Sidebar>
   );

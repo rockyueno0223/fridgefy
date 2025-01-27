@@ -1,5 +1,5 @@
 export interface IRecipe {
-  id: string;
+  _id: string;
   name: string;
   ingredients: IIngredient[];
   instructions: string[];

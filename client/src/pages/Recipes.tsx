@@ -52,7 +52,7 @@ export function Recipes() {
 
       <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-2">
         {filteredData.map((recipe) => (
-          <RecipeCard key={recipe.id} {...recipe} />
+          <RecipeCard key={recipe._id} {...recipe} />
         ))}
       </div>
 

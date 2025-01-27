@@ -20,7 +20,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [loadingRecipes, setLoadingRecipes] = useState<boolean>(false);
   const [recipesError, setRecipesError] = useState<string | null>(null);
 
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [wishlist, setWishlist] = useState<IUser["wishlist"]>([]);
 
   useEffect(() => {
     if (clerkUser) {
@@ -42,6 +42,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           const data = await res.json();
 
           setUser(data);
+          setWishlist(data.wishlist)
           setUserError(null);
         } catch (error) {
           console.error("Error fetching user", error);
@@ -234,6 +235,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // wishlist 
   // Add to wishlist
   const addToWishlist = async (recipeId: string) => {
+    if (user?.wishlist.some(reicpe => reicpe._id === recipeId)) {
+      return;
+    }
+
     try {
       const res = await fetch(
         `http://localhost:3400/api/v1/users/me/wishlist/add`,
@@ -243,12 +248,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             Authorization: `Bearer ${await getToken()}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ recipeId }),
+          body: JSON.stringify({ ingredientId: recipeId }),
         }
       );
       const data = await res.json();
       if (data.success) {
-        setWishlist((prev) => [...prev, recipeId]);
+        setWishlist(() => data.wishlist);
       } else {
         console.error(data.message);
       }
@@ -268,12 +273,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             Authorization: `Bearer ${await getToken()}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ recipeId }),
+          body: JSON.stringify({ ingredientId: recipeId }),
         }
       );
       const data = await res.json();
       if (data.success) {
-        setWishlist((prev) => prev.filter((id) => id !== recipeId));
+        setWishlist(data.wishlist);
       } else {
         console.error(data.message);
       }
