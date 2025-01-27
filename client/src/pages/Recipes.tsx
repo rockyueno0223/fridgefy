@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 
 export function Recipes() {
   const { recipes, loadingRecipes, recipesError } = useAppContext();
-
   const [filteredData, setFilteredData] = useState<IRecipe[]>([]);
+
+
 
   useEffect(() => {
     setFilteredData(recipes || []);

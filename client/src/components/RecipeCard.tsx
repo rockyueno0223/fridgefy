@@ -3,8 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IRecipe } from "@/types/recipe";
 import { Clock } from "lucide-react";
 import { Button } from "./ui/button";
+import { useAppContext } from "@/context/AppContext";
+
 
 const RecipeCard = ({
+  id,
   name,
   prepTimeMinutes,
   cookTimeMinutes,
@@ -14,17 +17,13 @@ const RecipeCard = ({
   image,
   tags,
 }: IRecipe) => {
+  const { wishlist, addToWishlist, removeFromWishlist } = useAppContext();
+  const isInWishlist = wishlist.includes(id);
+
   return (
     <Card className="w-full overflow-hidden mb-4">
-      <div
-        className="
-      w-full h-48"
-      >
-        <img
-          src={image || "/api/placeholder/400/320"}
-          alt={name}
-          className="w-full h-full object-cover"
-        />
+      <div className="w-full h-48">
+        <img src={image || "/api/placeholder/400/320"} alt={name} className="w-full h-full object-cover" />
       </div>
 
       <CardHeader>
@@ -51,9 +50,7 @@ const RecipeCard = ({
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <div className="flex justify-start items-center text-gray-500">
-            Ingredients:{" "}
-          </div>
+          <div className="flex justify-start items-center text-gray-500">Ingredients:</div>
           {ingredients.map((item) => (
             <Badge key={item.id} variant="secondary">
               {item.name}
@@ -61,14 +58,23 @@ const RecipeCard = ({
           ))}
         </div>
       </CardContent>
+
       <div className="w-full flex justify-center items-center p-2 space-x-2">
         <Button variant={"outline"} className="w-full">
           More
         </Button>
-        <Button className="w-full">Add</Button>
+        <Button
+          className="w-full"
+          variant={isInWishlist ? "destructive" : "default"}
+          onClick={() => (isInWishlist ? removeFromWishlist(id) : addToWishlist(id))}
+        >
+          {isInWishlist ? "Remove" : "Add"}
+        </Button>
       </div>
     </Card>
   );
 };
 
 export default RecipeCard;
+
+

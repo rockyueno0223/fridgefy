@@ -9,6 +9,9 @@ type AppContextType = {
   userError: string | null;
   loadingRecipes: boolean;
   recipesError: string | null;
+  wishlist: string[] ;
+  addToWishlist: (recipeId: string) => void;
+  removeFromWishlist: (recipeId: string) => void; 
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);

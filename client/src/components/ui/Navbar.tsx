@@ -16,13 +16,13 @@ export const Navbar = ({ isToggle }: Props) => {
                 <p>Home</p>
             </NavLink>
             <NavLink
-                to="recipes"
+                to="/recipes"
                 onClick={isToggle}
                 className={({ isActive }) => `${isActive ? "text-black" : "text-white "}`}>
                 <p>Recipes</p>
             </NavLink>
             <NavLink
-                to="shoppinglist"
+                to="/shoppinglist"
                 onClick={isToggle}
                 className={({ isActive }) => `${isActive ? "text-black" : "text-white"}`}>
                 <p>Shopping List</p>

@@ -4,8 +4,11 @@ import { IUser } from "@/types/user";
 import { useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 
+const WISHLIST_KEY = "recipe-wishlist";
+
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const { user: clerkUser } = useUser();
+  // const {getToken} = useAuth()
 
   const [user, setUser] = useState<IUser | null>(() => {
     const savedUser = sessionStorage.getItem("user");
@@ -19,6 +22,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [loadingRecipes, setLoadingRecipes] = useState<boolean>(false);
   const [recipesError, setRecipesError] = useState<string | null>(null);
 
+  const [wishlist, setWishlist] = useState<string[]>(() => {
+    return JSON.parse(localStorage.getItem(WISHLIST_KEY) || "[]");
+  });
+
   useEffect(() => {
     if (clerkUser) {
       const fetchUser = async () => {
@@ -26,9 +33,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           setLoadingUser(true);
 
           const res = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/${
-              clerkUser.id
-            }`
+              `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/${
+                clerkUser.id
+              }`
           );
           if (!res.ok) {
             throw new Error("User not found");
@@ -82,6 +89,20 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     fetchRecipes();
   }, []);
 
+  // wishlist (temporary)
+
+  useEffect(() => {
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const addToWishlist = (recipeId: string) => {
+    setWishlist((prev) => (prev.includes(recipeId) ? prev : [...prev, recipeId]));
+  };
+
+  const removeFromWishlist = (recipeId: string) => {
+    setWishlist((prev) => prev.filter((id) => id !== recipeId));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -91,6 +112,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         userError,
         loadingRecipes,
         recipesError,
+        wishlist,
+        addToWishlist,
+        removeFromWishlist,
       }}
     >
       {children}
