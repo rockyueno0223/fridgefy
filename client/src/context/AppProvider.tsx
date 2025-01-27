@@ -230,6 +230,21 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // 1. Fridge(rm) > Cart(add)
   // 2. Cart(rm) > Fridge(add)
 
+  // ↑its needed for responsivenes
+
+  // wishlist 
+  useEffect(() => {
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const addToWishlist = (recipeId: string) => {
+    setWishlist((prev) => (prev.includes(recipeId) ? prev : [...prev, recipeId]));
+  };
+
+  const removeFromWishlist = (recipeId: string) => {
+    setWishlist((prev) => prev.filter((id) => id !== recipeId));
+  };
+
 
   return (
     <AppContext.Provider
