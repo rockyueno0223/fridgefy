@@ -6,8 +6,8 @@ import { Button } from "./button";
 
 export const AddBtn = () => {
     return (
-        <Button className="size-[30px]">
-            <Plus size={16} absoluteStrokeWidth={true} strokeWidth={3} />
+        <Button className="size-[20px]">
+            <Plus size={16} absoluteStrokeWidth={true} strokeWidth={1} />
         </Button>
     )
 }
