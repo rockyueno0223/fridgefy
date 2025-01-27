@@ -1,200 +1,108 @@
-import { Recipe } from "@/components/RecipeCard"
+import { useAppContext } from "@/context/AppContext";
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
+// Define the IIngredient interface
+export interface IIngredient {
+    id: string;
+    name: string;
+}
 
-
-export type Ingredient = {
-    id: number,
-    name: string
+// Define the IRecipe interface
+export interface IRecipe {
+    _id: string;
+    name: string;
+    ingredients: IIngredient[];
+    instructions: string[];
+    prepTimeMinutes: number;
+    cookTimeMinutes: number;
+    cuisine: string;
+    caloriesPerServing: number;
+    tags: string[];
+    userId: string;
+    image: string;
+    rating: number;
+    reviewCount: number;
+    mealType: string[];
 }
 
 export const ShoppingList = () => {
-    const [ingredients, setIngredients] = useState<Ingredient[]>([])
-    const [storedRecipes, setStoredRecipes] = useState<Recipe[]>([
-        {
-            "id": 1,
-            "name": "Classic Margherita Pizza",
-            "ingredients": [
-                "Pizza dough",
-                "Tomato sauce",
-                "Fresh mozzarella cheese",
-                "Fresh basil leaves",
-                "Olive oil",
-                "Salt and pepper to taste"
-            ],
-            "instructions": [
-                "Preheat the oven to 475°F (245°C).",
-                "Roll out the pizza dough and spread tomato sauce evenly.",
-                "Top with slices of fresh mozzarella and fresh basil leaves.",
-                "Drizzle with olive oil and season with salt and pepper.",
-                "Bake in the preheated oven for 12-15 minutes or until the crust is golden brown.",
-                "Slice and serve hot."
-            ],
-            "prepTimeMinutes": 20,
-            "cookTimeMinutes": 15,
-            // "servings": 4,
-            // "difficulty": "Easy",
-            "cuisine": "Italian",
-            "caloriesPerServing": 300,
-            "tags": [
-                "Pizza",
-                "Italian"
-            ],
-            "userId": 166,
-            "image": "https://cdn.dummyjson.com/recipe-images/1.webp",
-            "rating": 4.6,
-            "reviewCount": 98,
-            "mealType": [
-                "Dinner"
-            ]
-        },
-        {
-            "id": 2,
-            "name": "Vegetarian Stir-Fry",
-            "ingredients": [
-                "Tofu, cubed",
-                "Broccoli florets",
-                "Carrots, sliced",
-                "Bell peppers, sliced",
-                "Soy sauce",
-                "Ginger, minced",
-                "Garlic, minced",
-                "Sesame oil",
-                "Cooked rice for serving"
-            ],
-            "instructions": [
-                "In a wok, heat sesame oil over medium-high heat.",
-                "Add minced ginger and garlic, sauté until fragrant.",
-                "Add cubed tofu and stir-fry until golden brown.",
-                "Add broccoli, carrots, and bell peppers. Cook until vegetables are tender-crisp.",
-                "Pour soy sauce over the stir-fry and toss to combine.",
-                "Serve over cooked rice."
-            ],
-            "prepTimeMinutes": 15,
-            "cookTimeMinutes": 20,
-            // "servings": 3,
-            // "difficulty": "Medium",
-            "cuisine": "Asian",
-            "caloriesPerServing": 250,
-            "tags": [
-                "Vegetarian",
-                "Stir-fry",
-                "Asian"
-            ],
-            "userId": 143,
-            "image": "https://cdn.dummyjson.com/recipe-images/2.webp",
-            "rating": 4.7,
-            "reviewCount": 26,
-            "mealType": [
-                "Lunch"
-            ]
-        },
-        {
-            "id": 3,
-            "name": "Chocolate Chip Cookies",
-            "ingredients": [
-                "All-purpose flour",
-                "Butter, softened",
-                "Brown sugar",
-                "White sugar",
-                "Eggs",
-                "Vanilla extract",
-                "Baking soda",
-                "Salt",
-                "Chocolate chips"
-            ],
-            "instructions": [
-                "Preheat the oven to 350°F (175°C).",
-                "In a bowl, cream together softened butter, brown sugar, and white sugar.",
-                "Beat in eggs one at a time, then stir in vanilla extract.",
-                "Combine flour, baking soda, and salt. Gradually add to the wet ingredients.",
-                "Fold in chocolate chips.",
-                "Drop rounded tablespoons of dough onto ungreased baking sheets.",
-                "Bake for 10-12 minutes or until edges are golden brown.",
-                "Allow cookies to cool on the baking sheet for a few minutes before transferring to a wire rack."
-            ],
-            "prepTimeMinutes": 15,
-            "cookTimeMinutes": 10,
-            // "servings": 24,
-            // "difficulty": "Easy",
-            "cuisine": "American",
-            "caloriesPerServing": 150,
-            "tags": [
-                "Cookies",
-                "Dessert",
-                "Baking"
-            ],
-            "userId": 34,
-            "image": "https://cdn.dummyjson.com/recipe-images/3.webp",
-            "rating": 4.9,
-            "reviewCount": 13,
-            "mealType": [
-                "Snack",
-                "Dessert"
-            ]
-        }
-    ])
+    const [ingredients, setIngredients] = useState<IIngredient[]>([]);
+    const { wishlist, loadingRecipes, recipesError, removeFromWishlist  } = useAppContext();
+
+    // Use recipes from context
+    const storedRecipes = wishlist as IRecipe[];
 
     useEffect(() => {
+        // Combine all ingredients from storedRecipes into a single array
+        const newArray: IIngredient[] = [];
+        storedRecipes?.forEach((recipe: IRecipe) => {
+            recipe.ingredients.forEach((ingredient: IIngredient) => {
+                newArray.push(ingredient);
+            });
+        });
 
-        //all "StoredRecipes" 's ingredients are stored in "Ingredients"
-        const newArray: any = []
-        storedRecipes.forEach((recipe: Recipe) => newArray.push(...recipe.ingredients))
-        const objectArray: Ingredient[] = newArray.map((name: string, index: number) => ({ id: Number(index + 1), name: String(name) }))
-        setIngredients(_prev => _prev = objectArray)
+        setIngredients(newArray);
+    }, [storedRecipes]);
 
-    }, [storedRecipes])
+    // Remove a recipe from the list
+    const handleRemove = (_id: string) => {
+        // Update the recipes state in the context (assuming you have a function to do this)
+        console.log("Remove recipe with ID:", _id);
+    };
 
+    if (loadingRecipes) {
+        return <div>Loading recipes...</div>;
+    }
 
-    //remove selected recipe from state "storedRecipes"
-    const handleRemove = (id: number) => {
-        setStoredRecipes(prevState => prevState.filter(prev => prev.id !== id))
+    if (recipesError) {
+        return <div>Error loading recipes: {recipesError}</div>;
     }
 
     return (
-        <>
-            <div className="accordion-container max-w-screen w-screen  px-16 pt-10 md:w-max">
-                <h1 className="font-bold pb-5 text-xl">My Recipes</h1>
+        <div className="accordion-container max-w-screen w-screen px-16 pt-10 md:w-max">
+            <h1 className="font-bold pb-5 text-xl">My Recipes</h1>
 
-                {storedRecipes.map((recipe) =>
-                    <Accordion key={recipe.id} type="single" collapsible >
-                        <AccordionItem value={recipe.id.toString()}>
-                            <AccordionTrigger>{recipe.name}</AccordionTrigger>
-                            <AccordionContent>
-                                <div className="flex flex-col gap-5">
-                                    <ul className="flex flex-col gap-3">
-                                        {recipe.ingredients.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}
-                                    </ul>
-                                    <div>
-                                        <Button onClick={() => handleRemove(recipe.id)}> Remove </Button>
-                                    </div>
+            {storedRecipes?.map((recipe) => (
+                <Accordion key={recipe._id} type="single" collapsible>
+                    <AccordionItem value={recipe._id}>
+                        <AccordionTrigger>{recipe.name}</AccordionTrigger>
+                        <AccordionContent>
+                            <div className="flex flex-col gap-5">
+                                <ul className="flex flex-col gap-3">
+                                    {recipe.ingredients.map((ingredient, index) => (
+                                        <li key={`${recipe._id}-${index}`}>{ingredient.name}</li>
+                                    ))}
+                                </ul>
+                                <div>
+                                    <Button
+                                        onClick={()=>removeFromWishlist(recipe._id)}
+                                        aria-label={`Remove ${recipe.name} from the list`}
+                                    >
+                                        Remove
+                                    </Button>
                                 </div>
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+            ))}
 
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                )
-                }
-
-
-                {/* Below is going to be stored in CartList */}
-                {/* <div>
-                <h2>Ingredients (test list)</h2>
+            {/* Optional: Display combined ingredients */}
+            {/* <div>
+                <h2>All Ingredients</h2>
                 <ul>
-                    {ingredients.map((ingredient) => <li key={ingredient.id}>{ingredient.name} </li>)}
+                    {ingredients.map((ingredient) => (
+                        <li key={ingredient.id}>{ingredient.name}</li>
+                    ))}
                 </ul>
             </div> */}
-
-
-            </div >
-        </>
-    )
-}
-
+        </div>
+    );
+};

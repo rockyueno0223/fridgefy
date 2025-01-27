@@ -18,7 +18,7 @@ const RecipeCard = ({
   tags,
 }: IRecipe) => {
   const { wishlist, addToWishlist, removeFromWishlist } = useAppContext();
-  const isInWishlist = wishlist.includes(_id);
+  const isInWishlist = wishlist.find((id) => id === _id) !== undefined;
 
   return (
     <Card className="w-full overflow-hidden mb-4">
