@@ -72,41 +72,67 @@ const removeFromCart = async (
     res.status(200).json({ success: true, cart: user.cart });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Unable to remove from cart" });
+    res
+      .status(500)
+      .json({ success: false, message: "Unable to remove from cart" });
   }
 };
 
 const addToFridge = async (
-  req: Request<{ id: string }, {}, IUser>,
+  req: Request<{}, {}, { ingredientIds: mongoose.Types.ObjectId[] }>,
   res: Response
 ) => {
+  const ingredientIds = req.body.ingredientIds;
   try {
-    const updatedFridge = await UserModel.findByIdAndUpdate(
-      req.params.id,
-      { $push: { fridge: req.body } },
+    const user = await UserModel.findOneAndUpdate(
+      { userId: req.auth.userId },
+      { $push: { fridge: { $each: ingredientIds } } },
       { new: true }
-    );
+    ).populate({ path: "fridge", model: IngredientModel });
 
-    //extra logic that prevents if its on cart do not add to fridge
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    res.status(201).json({ success: true, fridge: user.fridge });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Unable to add to fridge" });
+    res
+      .status(500)
+      .json({ success: false, message: "Unable to add to fridge" });
   }
 };
 
 const removeFromFridge = async (
-  req: Request<{ id: string }, {}, IUser>,
+  req: Request<{}, {}, { ingredientIds: mongoose.Types.ObjectId[] }>,
   res: Response
 ) => {
+  const ingredientIds = req.body.ingredientIds;
   try {
-    const updatedFridge = await UserModel.findByIdAndUpdate(
-      req.params.id,
-      { $pull: { fridge: req.body } },
+    const user = await UserModel.findOneAndUpdate(
+      { userId: req.auth.userId },
+      { $pull: { fridge: { $in: ingredientIds } } },
       { new: true }
-    );
+    ).populate({ path: "fridge", model: IngredientModel });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    res.status(201).json({ success: true, fridge: user.fridge });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Unable to remove from fridge" });
+    res
+      .status(500)
+      .json({ success: false, message: "Unable to remove from fridge" });
   }
 };
 
