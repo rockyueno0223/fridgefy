@@ -34,4 +34,4 @@ protectedRouter.use(async (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-protectedRouter.use("/users", userRouter);
+protectedRouter.use("/", userRouter);
