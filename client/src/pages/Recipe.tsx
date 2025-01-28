@@ -26,7 +26,7 @@ export default function Recipe() {
     return <p>Loading...</p>;
   }
   return (
-    <div className="flex mx-auto p-10 w-full">
+    <div className=" m-auto p-10 w-screen">
       <div className="max-w-[500px] mx-auto">
         <Card className="w-full overflow-hidden mb-4">
           <div className="w-full h-48">

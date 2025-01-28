@@ -20,6 +20,7 @@ type AppContextType = {
   removeFromWishlist: (recipeId: string) => void;
   // addToFridge: (id: string) => Promise<void>;
   // fridge: IIngredient[]
+  checkUniqueCart: (ingredientIds: string[]) => string[]
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
