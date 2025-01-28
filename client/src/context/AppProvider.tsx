@@ -375,6 +375,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await res.json();
       if (data.success) {
         setWishlist(() => data.wishlist);
+
+        const addedRecipe = data.wishlist.filter(
+          (recipe: IRecipe) => recipe._id === recipeId
+        );
+
+        addToCart(addedRecipe[0].ingredients);
       } else {
         console.error(data.message);
       }
@@ -400,6 +406,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await res.json();
       if (data.success) {
         setWishlist(data.wishlist);
+
+        const removedRecipe = wishlist.filter(
+          (recipe: IRecipe) => recipe._id === recipeId
+        );
+
+        if (removedRecipe) removeFromCart(removedRecipe[0].ingredients);
       } else {
         console.error(data.message);
       }
