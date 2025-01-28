@@ -5,7 +5,6 @@ import { Clock } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAppContext } from "@/context/AppContext";
 
-
 const RecipeCard = ({
   _id,
   name,
@@ -13,22 +12,29 @@ const RecipeCard = ({
   cookTimeMinutes,
   caloriesPerServing,
   ingredients,
-  // rating,
   image,
   tags,
 }: IRecipe) => {
   const { wishlist, addToWishlist, removeFromWishlist } = useAppContext();
-  const isInWishlist = wishlist.find((id) => id === _id) !== undefined;
+  const isInWishlist = wishlist.some((item) => item._id === _id);
+
 
   return (
     <Card className="w-full overflow-hidden mb-4">
       <div className="w-full h-48">
-        <img src={image} alt={name} className="w-full h-full object-cover" />
+        <img 
+          src={image || "/path/to/fallback/image.jpg"} 
+          alt={name} 
+          className="w-full h-full object-cover" 
+          onError={(e) => {
+            e.currentTarget.src = "/path/to/fallback/image.jpg";
+          }}
+        />
       </div>
 
       <CardHeader>
         <div className="flex flex-wrap gap-2 mb-2">
-          {tags.map((tag) => (
+          {tags?.map((tag) => (
             <Badge key={tag} variant="outline" className="text-xs">
               {tag}
             </Badge>
@@ -51,8 +57,8 @@ const RecipeCard = ({
 
         <div className="mt-4 flex flex-wrap gap-2">
           <div className="flex justify-start items-center text-gray-500">Ingredients:</div>
-          {ingredients.map((item) => (
-            <Badge key={item.id} variant="secondary">
+          {ingredients?.map((item, index) => (
+            <Badge key={index} variant="secondary">
               {item.name}
             </Badge>
           ))}
@@ -60,13 +66,14 @@ const RecipeCard = ({
       </CardContent>
 
       <div className="w-full flex justify-center items-center p-2 space-x-2">
-        <Button variant={"outline"} className="w-full">
+        <Button variant={"outline"} className="w-full" aria-label="View more details">
           More
         </Button>
         <Button
           className="w-full"
           variant={isInWishlist ? "destructive" : "default"}
           onClick={() => (isInWishlist ? removeFromWishlist(_id) : addToWishlist(_id))}
+          aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
         >
           {isInWishlist ? "Remove" : "Add"}
         </Button>
@@ -76,5 +83,3 @@ const RecipeCard = ({
 };
 
 export default RecipeCard;
-
-
