@@ -422,7 +422,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           (recipe: IRecipe) => recipe._id === recipeId
         );
 
-        addToCart(addedRecipe[0].ingredients);
+        const itemsNoneDupliclatetoFridge = checkUniqueFridge(addedRecipe[0].ingredients)
+        addToCart(itemsNoneDupliclatetoFridge);
       } else {
         console.error(data.message);
       }
