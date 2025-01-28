@@ -7,6 +7,7 @@ import {
   SidebarHeader,
   SidebarTrigger,
 } from "./ui/sidebar";
+
 import { useAppContext } from "@/context/AppContext";
 
 
@@ -28,7 +29,10 @@ export const RecipeSidebar = () => {
               {wishlist?.map((recipe, index) => (
                 <li key={index} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md">
                   <span className="flex-1">{recipe.name}</span>
-                  <button onClick={() => removeFromWishlist(recipe._id)} className="text-gray-500 hover:text-red-500 transition-colors px-2">
+                  <button
+                    onClick={() => removeFromWishlist(recipe._id)}
+                    className="text-gray-500 hover:text-red-500 transition-colors px-2 text-xl"
+                  >
                     &#215;
                   </button>
                 </li>

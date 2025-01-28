@@ -6,6 +6,7 @@ import { ContextProvider } from "./context/ContextProvider.tsx";
 import "./index.css";
 import RootLayout from "./layouts/Rootlayout.tsx";
 import { Home } from "./pages/Home.tsx";
+import Recipe from "./pages/Recipe.tsx";
 import { Recipes } from "./pages/Recipes.tsx";
 import { ShoppingList } from "./pages/ShoppingList.tsx";
 
@@ -25,7 +26,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "recipes",
-        element: <Recipes />,
+        children: [
+          {
+            index: true,
+            element: <Recipes />,
+          },
+          {
+            path: ":recipeId",
+            element: <Recipe />,
+          },
+        ],
       },
       {
         path: "shoppinglist",

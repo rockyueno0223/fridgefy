@@ -1,9 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAppContext } from "@/context/AppContext";
 import { IRecipe } from "@/types/recipe";
 import { Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useAppContext } from "@/context/AppContext";
+
 
 const RecipeCard = ({
   _id,
@@ -56,6 +59,7 @@ const RecipeCard = ({
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
+
           <div className="flex justify-start items-center text-gray-500">Ingredients:</div>
           {ingredients?.map((item, index) => (
             <Badge key={index} variant="secondary">
@@ -66,6 +70,7 @@ const RecipeCard = ({
       </CardContent>
 
       <div className="w-full flex justify-center items-center p-2 space-x-2">
+
         <Button variant={"outline"} className="w-full" aria-label="View more details">
           More
         </Button>
