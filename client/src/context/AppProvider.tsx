@@ -141,6 +141,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const addToFridge = async (ingredientIds: string[]) => {
+    const checkedIds = checkUniqueIngredients(ingredientIds)
+    console.log(checkedIds)
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/fridge/add`,
@@ -150,7 +153,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             Authorization: `Bearer ${await getToken()}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ingredientIds }),
+          body: JSON.stringify({ ingredientIds: checkedIds }),
         }
       );
       const data = await res.json();
@@ -220,8 +223,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const ingredientSearch = (value: string) => {
       const fetchResults = async () => {
         const res = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_URL
+          `${import.meta.env.VITE_BACKEND_URL
           }/api/v1/ingredients/search?q=${value}}`
         );
         if (!res.ok) {
@@ -256,8 +258,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   ) => {
     try {
       const res = await fetch(
-        `${
-          import.meta.env.VITE_BACKEND_URL
+        `${import.meta.env.VITE_BACKEND_URL
         }/api/v1/users/me/${target}/${action}`,
         {
           method: "PATCH",
@@ -275,11 +276,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // check the Unique Ingredient
-  const checkIngredientIsUnique = (id: string): boolean => {
+
+  const checkUniqueIngredients = (ingredientIds: string[]): string[] => {
+    if (!user) {
+      console.log(`error: sth went wrong on check unique ingredients.`)
+      return []
+    }
+    const ids = ingredientIds.filter((ingredientId) =>
+      !user.cart.some((item) => item._id === ingredientId) &&
+      !user.fridge.some((item) => item._id === ingredientId)
+    )
+    console.log("checkUniqueIngredients_ids", ids)
     return (
-      !cart.some((item) => item._id === id) &&
-      !fridge.some((item) => item._id === id)
+      ids
     );
   };
 
