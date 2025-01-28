@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAppContext } from "@/context/AppContext";
 import { IRecipe } from "@/types/recipe";
 import { Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
+
 
 
 const RecipeCard = ({
@@ -68,10 +70,11 @@ const RecipeCard = ({
       </CardContent>
 
       <div className="w-full flex justify-center items-center p-2 space-x-2">
-
-        <Button variant={"outline"} className="w-full" aria-label="View more details">
-          More
-        </Button>
+        <Link to={`/recipes/${_id}`} className="w-full">
+          <Button variant={"outline"} className="w-full" aria-label="View more details">
+            More
+          </Button>
+        </Link>
         <Button
           className="w-full"
           variant={isInWishlist ? "destructive" : "default"}
