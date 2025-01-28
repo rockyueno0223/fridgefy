@@ -1,4 +1,3 @@
-import { IIngredient } from "@/types/ingredient";
 import { IRecipe } from "@/types/recipe";
 import { IUser } from "@/types/user";
 import { createContext, useContext } from "react";
@@ -10,13 +9,17 @@ type AppContextType = {
   userError: string | null;
   loadingRecipes: boolean;
   recipesError: string | null;
+  addToCart: (ingredientIds: string[]) => void;
+  removeFromCart: (ingredientIds: string[]) => void;
+  addToFridge: (ingredientIds: string[]) => void;
+  removeFromFridge: (ingredientIds: string[]) => void;
 
-  wishlist: IRecipe[] ;
+  wishlist: IRecipe[];
 
   addToWishlist: (recipeId: string) => void;
   removeFromWishlist: (recipeId: string) => void;
-  addToFridge: (id: string) => Promise<void>;
-  fridge: IIngredient[]
+  // addToFridge: (id: string) => Promise<void>;
+  // fridge: IIngredient[]
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);

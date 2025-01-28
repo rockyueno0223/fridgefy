@@ -1,29 +1,32 @@
-import { AppContext } from "@/context/AppContext";
+import { useAppContext } from "@/context/AppContext";
 import { IIngredient } from "@/types/ingredient";
-import { useContext } from "react";
 
 type Props = {
   results: IIngredient[];
 };
 
 export default function SearchFridgeResults({ results }: Props) {
+  const { addToFridge } = useAppContext();
 
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useAppContext must be used within an AppProvider");
-  }
-  const { addToFridge } = context;
-
+  const handleAddToFridge = async (id: string) => {
+    try {
+      addToFridge([id]);
+    } catch (error) {
+      console.error(`Cannot add ingredient to Fridge-${error}`);
+    }
+  };
 
   // if ((results.length === 0)) return <div>Ingredient does not exist...</div>;
   return (
     <div>
       {results.map((result) => (
         <li
-          key={result.id}
+          key={result._id}
           className="hover:bg-slate-400 hover:cursor-pointer"
         >
-          <button onClick={() => addToFridge(result.id)}>{result.name}</button>
+          <button onClick={() => addToFridge([result._id])}>
+            {result.name}
+          </button>
         </li>
       ))}
     </div>

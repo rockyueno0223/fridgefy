@@ -5,7 +5,6 @@ import { IUser } from "@/types/user";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 
-
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const { user: clerkUser } = useUser();
 
@@ -42,7 +41,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           const data = await res.json();
 
           setUser(data);
-          setWishlist(data.wishlist)
+          setWishlist(data.wishlist);
           setUserError(null);
         } catch (error) {
           console.error("Error fetching user", error);
@@ -81,6 +80,128 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     fetchRecipes();
   }, []);
 
+  const addToCart = async (ingredientIds: string[]) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/cart/add`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ingredientIds }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setUser((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            cart: data.cart,
+          };
+        });
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.error("Error adding ingredient to cart", error);
+    }
+  };
+
+  const removeFromCart = async (ingredientIds: string[]) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/cart/remove`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ingredientIds }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setUser((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            cart: data.cart,
+          };
+        });
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.error("Error removing ingredient from cart", error);
+    }
+  };
+
+  const addToFridge = async (ingredientIds: string[]) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/fridge/add`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ingredientIds }),
+        }
+      );
+      const data = await res.json();
+      console.log("data", data);
+
+      if (data.success) {
+        setUser((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            fridge: data.fridge,
+          };
+        });
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.error(`Cannot add ingredient to Fridge-${error}`);
+    }
+  };
+
+  const removeFromFridge = async (ingredientIds: string[]) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/fridge/remove`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ingredientIds }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        setUser((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            fridge: data.fridge,
+          };
+        });
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.error(`Cannot remove ingredient to Fridge-${error}`);
+    }
+  };
+
   // Cart & Fridge demo
   const [cart, setCart] = useState<IIngredient[]>([]);
   const [fridge, setFridge] = useState<IIngredient[]>([]);
@@ -99,7 +220,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const ingredientSearch = (value: string) => {
       const fetchResults = async () => {
         const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL
+          `${
+            import.meta.env.VITE_BACKEND_URL
           }/api/v1/ingredients/search?q=${value}}`
         );
         if (!res.ok) {
@@ -128,13 +250,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   //Update Ingredient data to Target
   const updateData = async (
-    id: IIngredient["id"],
+    id: IIngredient["_id"],
     target: string,
     action: "add" | "remove"
   ) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL
+        `${
+          import.meta.env.VITE_BACKEND_URL
         }/api/v1/users/me/${target}/${action}`,
         {
           method: "PATCH",
@@ -155,74 +278,74 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   // check the Unique Ingredient
   const checkIngredientIsUnique = (id: string): boolean => {
     return (
-      !cart.some((item) => item.id === id) &&
-      !fridge.some((item) => item.id === id)
+      !cart.some((item) => item._id === id) &&
+      !fridge.some((item) => item._id === id)
     );
   };
 
-  //handle Add to Fridge
-  const addToFridge = async (id: string) => {
-    try {
-      if (!checkIngredientIsUnique(id)) {
-        alert("This ingredient is already in Fridge or Cart!");
-        return;
-      }
+  // //handle Add to Fridge
+  // const addToFridge = async (id: string) => {
+  //   try {
+  //     if (!checkIngredientIsUnique(id)) {
+  //       alert("This ingredient is already in Fridge or Cart!");
+  //       return;
+  //     }
 
-      const ingredient = await fetchIngredientById(id); //fetch Ingredient data by id
-      const success = await updateData(id, "fridge", "add"); // BE store ID only
+  //     const ingredient = await fetchIngredientById(id); //fetch Ingredient data by id
+  //     const success = await updateData(id, "fridge", "add"); // BE store ID only
 
-      if (success) {
-        setFridge((prev: IIngredient[]) => [...prev, ingredient]);
-      }
-    } catch (error) {
-      console.error(`Cannot add ingredient to Fridge-${error}`);
-    }
-  };
+  //     if (success) {
+  //       setFridge((prev: IIngredient[]) => [...prev, ingredient]);
+  //     }
+  //   } catch (error) {
+  //     console.error(`Cannot add ingredient to Fridge-${error}`);
+  //   }
+  // };
 
-  //handle Add to Cart
-  const addToCart = async (id: string) => {
-    try {
-      if (!checkIngredientIsUnique(id)) {
-        alert("This ingredient is already in Fridge or Cart!");
-        return;
-      }
+  // //handle Add to Cart
+  // const addToCart = async (id: string) => {
+  //   try {
+  //     if (!checkIngredientIsUnique(id)) {
+  //       alert("This ingredient is already in Fridge or Cart!");
+  //       return;
+  //     }
 
-      const ingredient = await fetchIngredientById(id);
-      const success = await updateData(id, "cart", "add");
+  //     const ingredient = await fetchIngredientById(id);
+  //     const success = await updateData(id, "cart", "add");
 
-      if (success) {
-        setCart((prev: IIngredient[]) => [...prev, ingredient]);
-      }
-    } catch (error) {
-      console.error(`Cannot add ingredient to Cart-${error}`);
-    }
-  };
+  //     if (success) {
+  //       setCart((prev: IIngredient[]) => [...prev, ingredient]);
+  //     }
+  //   } catch (error) {
+  //     console.error(`Cannot add ingredient to Cart-${error}`);
+  //   }
+  // };
 
-  // handle remove from Fridge
-  const removeFromFridge = async (id: string) => {
-    try {
-      const success = await updateData(id, "fridge", "remove");
-      if (success) {
-        setFridge((prev: IIngredient[]) =>
-          prev.filter((item) => item.id !== id)
-        );
-      }
-    } catch (error) {
-      console.error(`Cannot remove ingredient to Fridge-${error}`);
-    }
-  };
+  // // handle remove from Fridge
+  // const removeFromFridge = async (id: string) => {
+  //   try {
+  //     const success = await updateData(id, "fridge", "remove");
+  //     if (success) {
+  //       setFridge((prev: IIngredient[]) =>
+  //         prev.filter((item) => item.id !== id)
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error(`Cannot remove ingredient to Fridge-${error}`);
+  //   }
+  // };
 
-  // handle remove from Cart
-  const removeFromCart = async (id: string) => {
-    try {
-      const success = await updateData(id, "cart", "remove");
-      if (success) {
-        setCart((prev: IIngredient[]) => prev.filter((item) => item.id !== id));
-      }
-    } catch (error) {
-      console.error(`Cannot remove ingredient to Cart-${error}`);
-    }
-  };
+  // // handle remove from Cart
+  // const removeFromCart = async (id: string) => {
+  //   try {
+  //     const success = await updateData(id, "cart", "remove");
+  //     if (success) {
+  //       setCart((prev: IIngredient[]) => prev.filter((item) => item.id !== id));
+  //     }
+  //   } catch (error) {
+  //     console.error(`Cannot remove ingredient to Cart-${error}`);
+  //   }
+  // };
 
   // >>> Move both side <<< or is this both optional?
   // 1. Fridge(rm) > Cart(add)
@@ -230,10 +353,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   // ↑its needed for responsivenes
 
-  // wishlist 
+  // wishlist
   // Add to wishlist
   const addToWishlist = async (recipeId: string) => {
-    if (user?.wishlist.some(reicpe => reicpe._id === recipeId)) {
+    if (user?.wishlist.some((reicpe) => reicpe._id === recipeId)) {
       return;
     }
 
@@ -293,11 +416,15 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         userError,
         loadingRecipes,
         recipesError,
+        addToFridge,
+        removeFromFridge,
+        addToCart,
+        removeFromCart,
         wishlist,
         addToWishlist,
         removeFromWishlist,
-        addToFridge,
-        fridge,
+        // addToFridge,
+        // fridge,
       }}
     >
       {children}

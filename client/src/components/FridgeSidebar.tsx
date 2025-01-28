@@ -1,5 +1,5 @@
-import { AppContext } from "@/context/AppContext";
-import { useContext } from "react";
+import { useAppContext } from "@/context/AppContext";
+import { ShoppingCart } from "lucide-react";
 import SearchFridge from "./SearchFridge";
 import {
   Sidebar,
@@ -11,8 +11,6 @@ import {
   SidebarTrigger,
 } from "./ui/sidebar";
 
-
-
 // test data
 // const fridgeItems = [
 //   { id: 1, name: "Milk" },
@@ -21,32 +19,24 @@ import {
 // ];
 
 export const FridgeSidebar = () => {
+  const { user, addToCart, removeFromFridge } = useAppContext();
 
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useAppContext must be used within an AppProvider");
-  }
-  const { fridge } = context;
+  const handleMoveFromFridgeToCart = async (id: string) => {
+    try {
+      await removeFromFridge([id]);
+      await addToCart([id]);
+    } catch (error) {
+      console.error(`Cannot add ingredient to Cart-${error}`);
+    }
+  };
 
-
-  // useEffect(() => {
-  //   const fetchRecipes = async () => {
-  //     try {
-
-  //       const res = await fetch(
-  //         `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me`
-  //       );
-  //       if (!res.ok) {
-  //         throw new Error("Recipes not found");
-  //       }
-  //       const data = await res.json();
-
-  //     };
-  //     fetchRecipes();
-  //   }
-  // }, [])
-
-
+  const handleRemoveFridge = async (id: string) => {
+    try {
+      await removeFromFridge([id]);
+    } catch (error) {
+      console.error(`Cannot remove ingredient to Fridge-${error}`);
+    }
+  };
 
   return (
     <Sidebar side="left" className="z-10 mt-24">
@@ -59,12 +49,19 @@ export const FridgeSidebar = () => {
             <SearchFridge />
           </div>
           <ul className="space-y-2">
-            {fridge.map((item) => (
-              <li key={item.id} className="flex justify-between">
-                <span>{item.name}</span>
-                <button>&#215;</button>
-              </li>
-            ))}
+            {user &&
+              user?.fridge.length > 0 &&
+              user?.fridge.map((item) => (
+                <li key={item._id} className="flex justify-between">
+                  <span>{item.name}</span>
+                  <button onClick={() => handleMoveFromFridgeToCart(item._id)}>
+                    <ShoppingCart />
+                  </button>
+                  <button onClick={() => handleRemoveFridge(item._id)}>
+                    &#215;
+                  </button>
+                </li>
+              ))}
           </ul>
         </SidebarGroupContent>
       </SidebarContent>

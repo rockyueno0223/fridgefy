@@ -1,42 +1,66 @@
+import { useAppContext } from "@/context/AppContext";
+import { Refrigerator } from "lucide-react";
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarHeader,
-    SidebarTrigger,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarTrigger,
 } from "./ui/sidebar";
 
 // test data
-const CartItems = [
-    { id: 1, name: "Milk" },
-    { id: 2, name: "Eggs" },
-    { id: 3, name: "Cheese" },
-];
-
-
+// const CartItems = [
+//     { id: 1, name: "Milk" },
+//     { id: 2, name: "Eggs" },
+//     { id: 3, name: "Cheese" },
+// ];
 
 export const CartSidebar = () => {
-    return (
-        <Sidebar className="z-10 mt-24" side="right">
-            <SidebarHeader />
-            <SidebarTrigger className="absolute left-0 top-4 -translate-x-full rotate-180" />
-            <SidebarContent className="p-4">
-                <SidebarGroupLabel className="text-xl">Cart</SidebarGroupLabel>
-                <SidebarGroupContent>
-                    <ul className="space-y-2">
-                        {CartItems.map((item) => (
-                            <li key={item.id} className="flex justify-between">
-                                <span>{item.name}</span>
-                                <button>&#215;</button>
-                            </li>
-                        ))}
-                    </ul>
-                </SidebarGroupContent>
-            </SidebarContent>
-            <SidebarFooter />
-        </Sidebar>
-    );
-};
+  const { user, removeFromCart, addToFridge } = useAppContext();
 
+  const handleMoveFromCartToFridge = async (id: string) => {
+    try {
+      await removeFromCart([id]);
+      await addToFridge([id]);
+    } catch (error) {
+      console.error(`Cannot add ingredient to Fridge-${error}`);
+    }
+  };
+
+  const handleRemoveCart = async (id: string) => {
+    try {
+      await removeFromCart([id]);
+    } catch (error) {
+      console.error(`Cannot remove ingredient to Cart-${error}`);
+    }
+  };
+  return (
+    <Sidebar className="z-10 mt-24" side="right">
+      <SidebarHeader />
+      <SidebarTrigger className="absolute left-0 top-4 -translate-x-full rotate-180" />
+      <SidebarContent className="p-4">
+        <SidebarGroupLabel className="text-xl">Cart</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <ul className="space-y-2">
+            {user &&
+              user.cart.length > 0 &&
+              user.cart.map((item) => (
+                <li key={item._id} className="flex justify-between">
+                  <span>{item.name}</span>
+                  <button onClick={() => handleMoveFromCartToFridge(item._id)}>
+                    <Refrigerator />
+                  </button>
+                  <button onClick={() => handleRemoveCart(item._id)}>
+                    &#215;
+                  </button>
+                </li>
+              ))}
+          </ul>
+        </SidebarGroupContent>
+      </SidebarContent>
+      <SidebarFooter />
+    </Sidebar>
+  );
+};

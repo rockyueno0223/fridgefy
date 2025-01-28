@@ -1,9 +1,9 @@
+import { AuthObject } from "@clerk/express";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { IngredientModel } from "../models/ingredient.model";
 import { RecipeModel } from "../models/recipe.model";
 import { UserModel } from "../models/user.model";
-import { AuthObject } from "@clerk/express";
 
 declare global {
   namespace Express {
@@ -25,6 +25,8 @@ const getUserPopulated = async (req: Request, res: Response) => {
       res.status(404).json({ message: "User does not exist" });
       return;
     }
+    console.log("user", user);
+
     res.status(200).json(user);
   } catch (err) {
     console.error(err);
@@ -150,8 +152,8 @@ const addToWishlist = async (
   res: Response
 ) => {
   const ingredientId = req.body.ingredientId;
-  console.log(ingredientId, req.auth.userId, );
-  
+  console.log(ingredientId, req.auth.userId);
+
   try {
     const user = await UserModel.findOneAndUpdate(
       { userId: req.auth.userId },
