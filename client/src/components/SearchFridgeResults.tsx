@@ -3,9 +3,13 @@ import { IIngredient } from "@/types/ingredient";
 
 type Props = {
   results: IIngredient[];
+  handleSetDefault: () => void;
 };
 
-export default function SearchFridgeResults({ results }: Props) {
+export default function SearchFridgeResults({
+  results,
+  handleSetDefault,
+}: Props) {
   const { addToFridge } = useAppContext();
 
   const handleAddToFridge = async (id: string) => {
@@ -24,7 +28,12 @@ export default function SearchFridgeResults({ results }: Props) {
           key={result._id}
           className="hover:bg-slate-400 hover:cursor-pointer"
         >
-          <button onClick={() => addToFridge([result._id])}>
+          <button
+            onClick={() => {
+              handleAddToFridge(result._id);
+              handleSetDefault();
+            }}
+          >
             {result.name}
           </button>
         </li>
