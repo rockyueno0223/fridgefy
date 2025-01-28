@@ -22,11 +22,11 @@ export default function SearchFridgeResults({
 
   // if ((results.length === 0)) return <div>Ingredient does not exist...</div>;
   return (
-    <div>
+    <div className="bg-white mt-1 rounded-md shadow-sm">
       {results.map((result) => (
         <li
           key={result._id}
-          className="hover:bg-slate-400 hover:cursor-pointer"
+          className="hover:bg-[#a5d2a1] hover:cursor-pointer list-none rounded-md p-1 text-left"
         >
           <button
             onClick={() => {

@@ -7,19 +7,17 @@ import {
   SidebarHeader,
   SidebarTrigger,
 } from "./ui/sidebar";
-import { useEffect, useState } from "react";
 // import { useAuth } from "@clerk/clerk-react";
 import { useAppContext } from "@/context/AppContext";
-import { IRecipe } from "@/types/recipe";
 
 export const RecipeSidebar = () => {
-  const { recipes, loadingRecipes, wishlist, removeFromWishlist } = useAppContext();
+  const { recipes, loadingRecipes, wishlist, removeFromWishlist } =
+    useAppContext();
   // const [wishlistItems, setWishlistItems] = useState<IRecipe[]>([]);
 
   // useEffect(() => {
   //   setWishlistItems((recipes ?? []).filter((recipe) => wishlist.includes(recipe._id)));
   // }, [recipes, wishlist]);
-  
 
   return (
     <Sidebar className="z-10 mt-24" side="right">
@@ -33,9 +31,15 @@ export const RecipeSidebar = () => {
           ) : wishlist.length > 0 ? (
             <ul className="space-y-2">
               {wishlist?.map((recipe) => (
-                <li key={recipe._id} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md">
+                <li
+                  key={recipe._id}
+                  className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md"
+                >
                   <span className="flex-1">{recipe.name}</span>
-                  <button onClick={() => removeFromWishlist(recipe._id)} className="text-gray-500 hover:text-red-500 transition-colors px-2">
+                  <button
+                    onClick={() => removeFromWishlist(recipe._id)}
+                    className="text-gray-500 hover:text-red-500 transition-colors px-2 text-xl"
+                  >
                     &#215;
                   </button>
                 </li>

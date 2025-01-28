@@ -25,7 +25,6 @@ const getUserPopulated = async (req: Request, res: Response) => {
       res.status(404).json({ message: "User does not exist" });
       return;
     }
-    console.log("user", user);
 
     res.status(200).json(user);
   } catch (err) {
@@ -152,7 +151,6 @@ const addToWishlist = async (
   res: Response
 ) => {
   const ingredientId = req.body.ingredientId;
-  console.log(ingredientId, req.auth.userId);
 
   try {
     const user = await UserModel.findOneAndUpdate(
