@@ -1,6 +1,8 @@
+
 import cors from "cors";
 import "dotenv/config";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+import "express-async-errors";
 import mongoose from "mongoose";
 import { v1router } from "./routes";
 
@@ -16,6 +18,10 @@ app.use(express.json());
 
 //routes
 app.use("/api/v1", v1router);
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  res.status(500).json({ message: err.message })
+})
 
 //connecting mongo db
 const MONGO_URI = process.env.DATABASE_URI!;
