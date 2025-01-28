@@ -49,12 +49,19 @@ export const CartSidebar = () => {
               user.cart.map((item) => (
                 <li key={item._id} className="flex justify-between">
                   <span>{item.name}</span>
-                  <button onClick={() => handleMoveFromCartToFridge(item._id)}>
-                    <Refrigerator />
-                  </button>
-                  <button onClick={() => handleRemoveCart(item._id)}>
-                    &#215;
-                  </button>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleMoveFromCartToFridge(item._id)}
+                    >
+                      <Refrigerator className="w-4 text-gray-500 hover:text-[#a5d2a1]" />
+                    </button>
+                    <button
+                      className="text-gray-500 hover:text-red-400 transition-colors px-2 text-xl"
+                      onClick={() => handleRemoveCart(item._id)}
+                    >
+                      &#215;
+                    </button>
+                  </div>
                 </li>
               ))}
           </ul>
