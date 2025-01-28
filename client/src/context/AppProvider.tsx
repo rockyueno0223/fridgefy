@@ -95,7 +95,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             Authorization: `Bearer ${await getToken()}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ingredientIds }),
+          body: JSON.stringify({ ingredientIds: checkedIds }),
         }
       );
       const data = await res.json();
