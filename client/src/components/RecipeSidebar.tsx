@@ -7,17 +7,13 @@ import {
   SidebarHeader,
   SidebarTrigger,
 } from "./ui/sidebar";
-// import { useAuth } from "@clerk/clerk-react";
+
 import { useAppContext } from "@/context/AppContext";
 
-export const RecipeSidebar = () => {
-  const { recipes, loadingRecipes, wishlist, removeFromWishlist } =
-    useAppContext();
-  // const [wishlistItems, setWishlistItems] = useState<IRecipe[]>([]);
 
-  // useEffect(() => {
-  //   setWishlistItems((recipes ?? []).filter((recipe) => wishlist.includes(recipe._id)));
-  // }, [recipes, wishlist]);
+export const RecipeSidebar = () => {
+  const { loadingRecipes, wishlist, removeFromWishlist } = useAppContext();
+
 
   return (
     <Sidebar className="z-10 mt-24" side="right">
@@ -30,11 +26,8 @@ export const RecipeSidebar = () => {
             <div className="text-center py-4">Loading...</div>
           ) : wishlist.length > 0 ? (
             <ul className="space-y-2">
-              {wishlist?.map((recipe) => (
-                <li
-                  key={recipe._id}
-                  className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md"
-                >
+              {wishlist?.map((recipe, index) => (
+                <li key={index} className="flex justify-between items-center p-2 hover:bg-gray-100 rounded-md">
                   <span className="flex-1">{recipe.name}</span>
                   <button
                     onClick={() => removeFromWishlist(recipe._id)}

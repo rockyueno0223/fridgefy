@@ -51,8 +51,8 @@ export function Recipes() {
       </div>
 
       <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-2">
-        {filteredData.map((recipe) => (
-          <RecipeCard key={recipe._id} {...recipe} />
+        {filteredData.map((recipe, index) => (
+          <RecipeCard key={index} {...recipe} />
         ))}
       </div>
 
