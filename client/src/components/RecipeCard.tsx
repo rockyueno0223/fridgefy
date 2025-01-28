@@ -3,9 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAppContext } from "@/context/AppContext";
 import { IRecipe } from "@/types/recipe";
 import { Clock } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useAppContext } from "@/context/AppContext";
 
 
 const RecipeCard = ({
@@ -25,10 +23,10 @@ const RecipeCard = ({
   return (
     <Card className="w-full overflow-hidden mb-4">
       <div className="w-full h-48">
-        <img 
-          src={image || "/path/to/fallback/image.jpg"} 
-          alt={name} 
-          className="w-full h-full object-cover" 
+        <img
+          src={image || "/path/to/fallback/image.jpg"}
+          alt={name}
+          className="w-full h-full object-cover"
           onError={(e) => {
             e.currentTarget.src = "/path/to/fallback/image.jpg";
           }}
