@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAppContext } from "@/context/AppContext";
 import { IRecipe } from "@/types/recipe";
 import { Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useAppContext } from "@/context/AppContext";
-
 
 const RecipeCard = ({
   _id,
@@ -50,7 +50,9 @@ const RecipeCard = ({
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <div className="flex justify-start items-center text-gray-500">Ingredients:</div>
+          <div className="flex justify-start items-center text-gray-500">
+            Ingredients:
+          </div>
           {ingredients.map((item) => (
             <Badge key={item.id} variant="secondary">
               {item.name}
@@ -60,13 +62,17 @@ const RecipeCard = ({
       </CardContent>
 
       <div className="w-full flex justify-center items-center p-2 space-x-2">
-        <Button variant={"outline"} className="w-full">
-          More
-        </Button>
+        <Link key={_id} to={`${_id}`}>
+          <Button variant={"outline"} className="w-full">
+            More
+          </Button>
+        </Link>
         <Button
           className="w-full"
           variant={isInWishlist ? "destructive" : "default"}
-          onClick={() => (isInWishlist ? removeFromWishlist(_id) : addToWishlist(_id))}
+          onClick={() =>
+            isInWishlist ? removeFromWishlist(_id) : addToWishlist(_id)
+          }
         >
           {isInWishlist ? "Remove" : "Add"}
         </Button>
@@ -76,5 +82,3 @@ const RecipeCard = ({
 };
 
 export default RecipeCard;
-
-
