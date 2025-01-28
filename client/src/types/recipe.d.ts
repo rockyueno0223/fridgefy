@@ -11,6 +11,8 @@ export interface IRecipe {
   userId: string;
   image: string;
   rating: number;
+  difficulty: string;
+  servings: number;
   reviewCount: number;
   mealType: string[];
 }
