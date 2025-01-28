@@ -14,6 +14,9 @@ export default function SearchFridge() {
 
   useEffect(() => {
     const getIngredientsByQuery = async (query: string) => {
+      if (query === "") {
+        return;
+      }
       const res = await fetch(
         `http://localhost:3400/api/v1/ingredients/search?q=${query}`
       );
@@ -36,6 +39,11 @@ export default function SearchFridge() {
     }
   };
 
+  const handleSetDefault = () => {
+    setResults([]);
+    setInput("");
+  };
+
   return (
     <div className="max-w-md mx-auto mb-6 mt-4">
       <div className="flex items-center w-full bg-white border rounded-md">
@@ -44,6 +52,7 @@ export default function SearchFridge() {
         </div>
         <Input
           type="search"
+          value={input}
           placeholder="Search ingredients..."
           className="flex-1 border-none focus:ring-0 focus:outline-none"
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +61,10 @@ export default function SearchFridge() {
         />
       </div>
       <div>
-        <SearchFridgeResults results={results} />
+        <SearchFridgeResults
+          results={results}
+          handleSetDefault={handleSetDefault}
+        />
       </div>
     </div>
   );
