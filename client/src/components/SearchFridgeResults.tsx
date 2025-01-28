@@ -10,10 +10,11 @@ export default function SearchFridgeResults({
   results,
   handleSetDefault,
 }: Props) {
-  const { addToFridge } = useAppContext();
+  const { addToFridge, checkUniqueCart } = useAppContext();
 
   const handleAddToFridge = async (id: string) => {
     try {
+      checkUniqueCart([id])
       addToFridge([id]);
     } catch (error) {
       console.error(`Cannot add ingredient to Fridge-${error}`);

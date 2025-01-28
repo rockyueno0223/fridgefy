@@ -81,6 +81,11 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const addToCart = async (ingredientIds: string[]) => {
+    const checkedIds = checkUniqueCart(ingredientIds)
+    if (checkedIds.length === 0) {
+      return
+    }
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/me/cart/add`,
@@ -141,8 +146,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const addToFridge = async (ingredientIds: string[]) => {
-    const checkedIds = checkUniqueIngredients(ingredientIds)
-    console.log(checkedIds)
+    const checkedIds = checkUniqueFridge(ingredientIds)
+    if (checkedIds.length === 0) {
+      return
+    }
 
     try {
       const res = await fetch(
@@ -277,20 +284,46 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
 
-  const checkUniqueIngredients = (ingredientIds: string[]): string[] => {
+  const checkUniqueFridge = (ingredientIds: string[]): string[] => {
     if (!user) {
       console.log(`error: sth went wrong on check unique ingredients.`)
       return []
     }
     const ids = ingredientIds.filter((ingredientId) =>
-      !user.cart.some((item) => item._id === ingredientId) &&
       !user.fridge.some((item) => item._id === ingredientId)
     )
-    console.log("checkUniqueIngredients_ids", ids)
     return (
       ids
     );
   };
+
+
+  const checkUniqueCart = (ingredientIds: string[]): string[] => {
+    if (!user) {
+      console.log(`error: sth went wrong on check unique ingredients.`)
+      return []
+    }
+    const ids = ingredientIds.filter((ingredientId) =>
+      !user.cart.some((item) => item._id === ingredientId))
+    return (
+      ids
+    );
+  };
+
+  // const checkUniqueBoth = (ingredientIds: string[]): string[] => {
+  //   if (!user) {
+  //     console.log(`error: sth went wrong on check unique ingredients.`)
+  //     return []
+  //   }
+  //   const ids = ingredientIds.filter((ingredientId) =>
+  //     !user.cart.some((item) => item._id === ingredientId) &&
+  //     !user.fridge.some((item) => item._id === ingredientId)
+  //   )
+  //   console.log("checkBoth", ids)
+  //   return (
+  //     ids
+  //   );
+  // };
 
   // //handle Add to Fridge
   // const addToFridge = async (id: string) => {
@@ -446,6 +479,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         removeFromWishlist,
         // addToFridge,
         // fridge,
+        checkUniqueCart
       }}
     >
       {children}
