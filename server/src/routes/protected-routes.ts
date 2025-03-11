@@ -1,7 +1,7 @@
-import { AuthObject, clerkMiddleware } from "@clerk/express";
-import { NextFunction, Request, Response, Router } from "express";
-import { UserModel } from "../models/user.model";
-import { userRouter } from "./user.routes";
+import { AuthObject, clerkMiddleware } from '@clerk/express';
+import { NextFunction, Request, Response, Router } from 'express';
+import { UserModel } from '../models/user.model';
+import { userRouter } from './user.routes';
 
 declare global {
   namespace Express {
@@ -21,7 +21,8 @@ protectedRouter.use(async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.auth.userId;
 
   if (!userId) {
-    res.status(401).json({ code: 401, message: "Unauthorized" });
+    res.status(401).json({ code: 401, message: 'Unauthorized' });
+    return;
   }
 
   // user must exist in the database
@@ -34,4 +35,4 @@ protectedRouter.use(async (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-protectedRouter.use("/", userRouter);
+protectedRouter.use('/', userRouter);
